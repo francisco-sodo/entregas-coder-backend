@@ -1,0 +1,94 @@
+<main class="main-container">
+
+    <div>
+        <h1>Lista de Productos</h1>
+        <p>CON HANDLEBARS Y WEBSOCKETS</p>
+    </div>
+
+    <div class="columns">
+
+{{!-- FORMULARIO --}}
+        <section class="form-container">
+            <div>
+                <h4>Consulta de productos con websockets</h4>
+            <div>
+
+             {{!--! FORM GET    --}}
+            <form class="form" id="formGet">
+                <div class="input-wrap">
+                    <label for="getProductId-input">Busca producto por ID</label>
+                    <p>O presiona directamente Consultar para ver todos los productos</p>
+                    <input id="getProductId-input" name="ProductId" type="text" alt="busca producto por ID"> 
+                </div> 
+
+                <div class="btn-wrap">
+                    <button>Consultar</button>
+                    <strong id="msgGet"></strong>
+                </div> 
+            </form>
+
+            {{!-- ! FORM POST    --}}
+            <form class="form" id="formPost">
+                <div class="input-wrap">
+                    <label for="postProduct-input">Agrega un Producto</label>
+                    <p>Debe agregar producto en formato JSON.</p>
+                     
+                    <textarea id="postProduct-input" name="addProductJson" type="text" placeholder="agrega un producto en formato JSON {'key':'value'}" rows="10"></textarea>
+                </div> 
+
+                <div class="btn-wrap">
+                    <button>Agregar</button>
+                    <strong id="msgPost"></strong>
+                </div> 
+            </form>
+
+
+
+            {{!--! FORM DELETE    --}}
+            <form class="form" id="formDel">
+                <div class="input-wrap">
+                    <label for="delProduct-input">Elimina producto por ID</label>
+                    <p>Ingrese el ID del Producto que desea eliminar</p>
+                    <input id="delProduct-input" name="ProductId" type="text" alt="elimina producto por ID"> 
+                </div> 
+
+                <div class="btn-wrap">
+                    <button>Eliminar</button>
+                    <strong id="msgDel"></strong>
+                </div> 
+            </form>
+
+
+
+        </section>
+
+
+{{!-- PRODUCTS CARDS --}}        
+        <section class="cards-container" id="cards-container">
+    
+            {{#each products}}
+                <div class="card" id="card">
+                    <div class="img-card-container">
+                        <img src={{this.thumbnail}} alt={{this.title}}>
+                    </div>
+                        <ul>
+                            <li><h2>{{this.title}}</h2></li>
+                            <li><h4><b>Precio: </b>${{this.price}}</h4></li>
+                            <li><b>Descripción:</b> {{this.description}}</li>
+                            <li><b>Código:</b> {{this.code}}</li>
+                            <li><b>Status:</b> {{this.status}}</li>
+                            <li><b>Stock:</b> {{this.stock}}</li>
+                            <li><b>Categoría:</b> {{this.category}}</li>
+                            <li><b>ID:</b> {{this.id}}</li>
+                        </ul>
+                </div>
+            {{/each}}
+        </section>
+
+    </div>
+    
+</main>
+
+
+<script src="/socket.io/socket.io.js"></script>
+<script src="/js/realtimeproducts.js"></script>
