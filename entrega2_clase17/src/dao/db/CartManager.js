@@ -75,27 +75,21 @@ export default class CartManager {
     }
 
 
+     
+//todo / PUT api/carts/:cid
+//? actualizar TODO el carrito con un producto. Debe recibir como body todo el arreglo de productos que queremos actualizar
     //! ACTUALIZAR PRODUCTOS EN CARRITO SELECCIONADO. 
     // REEMPLAZAR productos en carrito seleccionado mediante save
     updateProductsInCart = async (cid, updateData) => {
         try {
             let cart = await cartsModel.findById(cid); // localizar carrito
-            console.log("11111",cart)
+            console.log("CART",cart)
             if(!cart ){
                 throw new Error(`Carrito con ID ${cid} no encontrado`);
         }
-
-        // Obtener los productos actuales del carrito
-        let currentProducts = cart.products;
-        console.log("22222",currentProducts)
-        // Obtener los nuevos productos o actualizaciones del cuerpo de la solicitud. Lo que viene de req.body en postman
-        //! no puedo traer la data que viene del body en postman
-        let updateProducts = updateData;
-        console.log("33333",updateProducts)
-        // Combinar los productos actuales con los nuevos productos o actualizaciones
-        
-        // Actualizar los productos en el carrito
-        
+        // Actualizar los productos del carrito
+        cart.products = updateData; // Reemplazar todos los productos con los nuevos
+        console.log("CART.PRODUCTS",cart.products)
 
         // Guardar los cambios en la base de datos
         await cart.save();
@@ -166,8 +160,5 @@ export default class CartManager {
 } //fin de la clase
 
 
-//todo / PUT api/carts/:cid
-//? actualizar TODO el carrito con un producto. Debe recibir como body todo el arreglo de productos que queremos actualizar
 
-//todo / PUT api/carts/:cid/products/:pid
-//? Debe actualizar SOLO LA CANTIDAD (quantity) que corresponda a dicho producto. La cantidad se la pasamos desde el req.body. El body que voy a enviar debe ser el producto como tal. Hacerlo desde su router. 
+

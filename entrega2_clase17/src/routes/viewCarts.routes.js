@@ -20,30 +20,6 @@ const router = Router()
 
 //? BUSCAR Y MOSTRAR UN CARRITO POR SU ID MEDIANTE REQ.PARAMS
 //GET
-// router.get('/:cid', async (req,res)=>{
-//     let { cid } = req.params
-//     try {
-//         let cart = await cartManager.getCartById(cid)
-//         let products = cart.products
-    
-//       //res.json(products)
-//         res.render('cart', {
-            
-//             title: "Vista | Carrito",
-//             _id: cid,
-//             cart:cart,
-//             products:products
-            
-//          })
-
-//          console.log("CARRO",cart)
-        
-//     } catch (error) {
-//         res.status(500).send({ status: 500, error: 'Error al obtener los carritos por ID' });
-//     }
-// })
-
-
 
 router.get('/:cid', async (req,res)=>{
     let { cid } = req.params;
