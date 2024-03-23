@@ -3,21 +3,14 @@ import __dirname from './utils.js';
 import handlebars from 'express-handlebars'
 
 
-// dependencias para las sessions
+// imports mongo mongoose sessions
 import session from 'express-session';
 import MongoStore from 'connect-mongo';
 import mongoose from 'mongoose';
 
-
-const app = express();
-
-
-// Middlewares de config.
-app.use(express.json())
-app.use(express.urlencoded({ extended: true }))
-
-
-
+//imports passport
+import passport from 'passport';
+import initializePassport from './config/passport.config.js'; // esta viene del archivo passport.config
 
 
 /*=============================================
@@ -44,45 +37,48 @@ import usersSessionsRoutes from './routes/usersSessions.routes.js'
 import viewUsersSessionsRoutes from './routes/viewUsersSessions.routes.js'
 
 
+const app = express();
 
 
 /*=============================================
-=           configuracion de HBS              =
+=        configuracion Middlewares JSON.      =
+=============================================*/
+app.use(express.json())
+app.use(express.urlencoded({ extended: true }))
+
+/*=============================================
+=      configuracion Middleware de HBS         =
 =============================================*/
 app.engine('handlebars', handlebars.engine());
-app.set('view engine', 'handlebars');
 app.set('views', __dirname + '/views'); // Carpeta views. Aca van a estar las plantillas de HB
+app.set('view engine', 'handlebars');
 app.use(express.static(__dirname + '/public'));//Indicamos que vamos a trabajar con archivos estaticos en carpeta public para alojar css, js..
 
-
-
-
-/*=============================================
-=           declaracion de PORT              =
-=============================================*/
-const PORT = process.env.PORT || 8080;
-app.listen(PORT, () => {
-    console.log(`Server run on port: ${PORT}`)
-})
 
 const URL_MONGO = 'mongodb+srv://fanky1986:LOmyNfS0kmmTHZZ4@cluster0.ptjuvdn.mongodb.net/ecommerce?retryWrites=true&w=majority&appName=Cluster0'
 
 
-
 /*=============================================
-=                   session                   =
+=     configuracion Middleware Sessions        =
 =============================================*/
 app.use(session({
-   
     store: MongoStore.create({
         mongoUrl: URL_MONGO,
-        ttl: 10*60
+        ttl: 10*30
     }),
     secret: "fran$3cr3t",
     resave: false, //guarda en memoria
     saveUninitialized: true, //lo guarda apenas se crea
 }));
 
+
+/*=============================================
+=     configuracion Middlewares Passport      =
+=============================================*/
+//inicializo passport y le digo que va a trabajar con sessiones
+initializePassport();
+app.use(passport.initialize());
+app.use(passport.session());
 
 
 
@@ -119,6 +115,14 @@ app.use("/users", viewUsersSessionsRoutes);
 
 
 
+
+/*=============================================
+=           declaracion de PORT              =
+=============================================*/
+const PORT = process.env.PORT || 8080;
+app.listen(PORT, () => {
+    console.log(`Server run on port: ${PORT}`)
+})
 
 /*=============================================
 =             connectMongoDB                  =

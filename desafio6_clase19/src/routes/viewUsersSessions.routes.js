@@ -22,13 +22,20 @@ let userSession = req.session.user
     res.render('login')
 
   } else{
-  res.render('products', {
+  res.render('products')
     // obtenemos los datos del user desde la session. Si ya entro en session, es porque se logueo, y ahi si podemos ver sus datos (perfil)
     //user: req.session.user 
     // todo: --  o aca pdriamos iniciar el carrito?
-})
   }
+});
 
+
+router.get("/profile", (req, res)=>{
+  let user = req.session.user
+  console.log(user)
+  res.render("profile", {
+    user
+  });
 });
 
 
@@ -41,6 +48,13 @@ router.get("/logout", (req, res) => {
       
   });
 });
+
+
+// todo implementar esta vista
+router.get("/error", (req, res)=>{
+  res.render("error");
+});
+
 
 
 
