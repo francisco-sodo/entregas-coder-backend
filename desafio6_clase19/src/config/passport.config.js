@@ -1,6 +1,6 @@
 import passport from 'passport';
 import passportLocal from 'passport-local';
-import userModel from '../dao/db/models/user.js';
+import userModel from '../dao/db/models/user.model.js';
 import { createHash, isValidPassword } from '../utils.js'; //bcrypt
 
 //declaramos la estrategia
@@ -27,15 +27,16 @@ const initializePassport = () => {
                     console.log("El usuario ya existe")
                     return done(null,false) // no es un error. Es una validacion. Por eso ponemos null (no hay error), false(validacion incorrecta). 
                    }
-
+                   
                    // si el usuario no existe, y puede ser registrado:
                    const user = {
-                    first_name, 
-                    last_name, 
-                    email, 
-                    age, 
-                    password: createHash(password)
-                }
+                       first_name, 
+                       last_name, 
+                       email, 
+                       age, 
+                       password: createHash(password)
+                    }
+                    
 
                 // lo damos de alta
                 const result = await userModel.create(user)

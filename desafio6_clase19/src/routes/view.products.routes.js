@@ -6,7 +6,7 @@ import { Router } from 'express';
 //import { ProductManager } from "../dao/filesystem/ProductManager.js";
 //*DB
 import  ProductManager  from "../dao/db/ProductManager.js";
-import { productsModel } from '../dao/db/models/products.js';
+import { productsModel } from '../dao/db/models/products.model.js';
 
 
 
