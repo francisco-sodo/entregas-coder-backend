@@ -21,20 +21,20 @@ import initializePassport from './config/passport.config.js'; // esta viene del 
 //* /api/carts/ -> DB 
 import cartsRoutes from './routes/carts.routes.js';
 //* /carts/ -> DB HB:
-import viewCartsRoutes from './routes/viewCarts.routes.js'; 
+import viewCartsRoutes from './routes/view.carts.routes.js'; 
 
 //product
 //* /api/products/ -> DB 
 import productsRoutes from './routes/products.routes.js';
 //* /products/ -> DB HB:
-import viewProductsRoutes from './routes/viewProducts.routes.js'; 
+import viewProductsRoutes from './routes/view.products.routes.js'; 
 
 
 //user session
 //* /api/sessions/ -> DB 
 import usersSessionsRoutes from './routes/usersSessions.routes.js'
 //* /users/  -> DB HB:
-import viewUsersSessionsRoutes from './routes/viewUsersSessions.routes.js'
+import viewUsersSessionsRoutes from './routes/view.usersSessions.routes.js'
 
 
 const app = express();

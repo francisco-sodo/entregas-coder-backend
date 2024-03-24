@@ -1,26 +1,38 @@
-<div>
-    <h1>Registro</h1>
-    <form id="registerForm">
+<main class="userSession-main">
+    <div class="userSessionForm-container">
+        <h1>Registro</h1>
+        <form class="userSessionForm" id="registerForm">
+            <div>
+                <label>Nombre</label>
+                <input class="formField" name="first_name">
+            </div>
+            <div>          
+                <label>Apellido</label>
+                <input class="formField" name="last_name">
+            </div> 
+            <div>         
+                <label>Email</label>
+                <input class="formField" name="email">
+            </div>
+            <div>           
+                <label>Edad</label>
+                <input class="formField" name="age">
+            </div>
+            <div>
+                <label>Contraseña</label>
+                <input class="formField" type="password" name="password">
+            </div> 
 
-        <label>Nombre</label>
-        <input name="first_name">
-        <br />
-        <label>Apellido</label>
-        <input name="last_name">
-        <br />
-        <label>Email</label>
-        <input name="email">
-        <br />
-        <label>Edad</label>
-        <input name="age">
-        <br />
-        <label>Contraseña</label>
-        <input type="password" name="password">
+            <br>
+            <div>
+                <input class="btn-normal" type="submit">
+            </div>
 
-        <input type="submit">
-    </form>
-    <p>¿Ya tienes una cuenta? <a href="/users/login">Ingresa aquí</a></p>
-</div>
+        </form>
+    </div>
+    <div>
+        <p>¿Ya tienes una cuenta? <a href="/users/login">Ingresa aquí</a></p>
+    </div>
+</main>
 
 <script src="/js/register.js"></script>
-{{!-- <script src="/src/public/js/register.js"></script> --}}

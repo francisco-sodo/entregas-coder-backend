@@ -1,14 +1,25 @@
-<div>
-    <h1>Login</h1>
-    <form id="loginForm">
-        <label>Email</label>
-        <input name="email">
-        <br />
-        <label>Contraseña</label>
-        <input type="password" name="password">
-        <input type="submit">
-    </form>
-    <p>¿No estás registrado? <a href="/users/register">Regístrate aquí</a></p>
-</div>
+<main class="userSession-main">
+    <div class="userSessionForm-container">
+        <h1>Login</h1>
+        <form class="userSessionForm" id="loginForm">
+            <div>
+                <label>Email</label>
+                <input class="formField" name="email">
+            </div>
+            <div>
+                <label>Contraseña</label>
+                <input class="formField" type="password" name="password">
+            </div>
+
+            <br>
+            <div>
+                <input class="btn-normal" type="submit">
+            </div>
+        </form>
+    </div>
+        <div>
+            <p>¿No estás registrado? <a href="/users/register">Regístrate aquí</a></p>
+        </div>
+</main>
 
 <script src="/js/login.js"></script>

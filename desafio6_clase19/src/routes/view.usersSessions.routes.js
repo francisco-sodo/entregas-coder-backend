@@ -6,11 +6,17 @@ const router = Router();
 
 // la idea es que cuando el usuario se logee pueda ver los productos
 router.get("/login", (req, res) => {
-  res.render('login')
+  res.render('login',{
+    title: "Login" ,
+    styleUserSessions: "StyleUserSessions.css",
+  })
 });
 
 router.get("/register", (req, res) => {
-    res.render('register')
+    res.render('register',{
+      title: "Register" ,
+      styleUserSessions: "StyleUserSessions.css",
+    })
     // todo: -- aca pdriamos iniciar el carrito?
 });
 
@@ -19,7 +25,10 @@ router.get("/", (req, res) => {
 let userSession = req.session.user
 
   if(!userSession){
-    res.render('login')
+    res.render('login',{
+      title: "Login" ,
+      styleUserSessions: "StyleUserSessions.css",
+    })
 
   } else{
   res.render('products')
@@ -44,7 +53,10 @@ router.get("/logout", (req, res) => {
       if (error){
           res.json({error: "error logout", mensaje: "Error al cerrar la sesion"});
       }
-      res.render('logout')
+      res.render('logout',{
+        title: "Logout" ,
+        styleUserSessions: "StyleUserSessions.css",
+      })
       
   });
 });
