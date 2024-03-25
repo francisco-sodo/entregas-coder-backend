@@ -19,18 +19,62 @@ const router = Router()
 //*PAGINATION con HB. VISTA DE TODOS LOS PRODUCTOS
 // EJ: http://localhost:8080/products?page=1
 router.get('/', async (req,res)=>{
+
+    // default page
     let page = parseInt(req.query.page);
     if(!page) page = 1;
-    
-    
+
+
+    // sort filter
+    let sort = req.query.sort;
+    let sortFilter = {}
+    if (sort === 'des') {
+        sortFilter = { price: -1 };
+    } else if (sort === 'asc') { 
+        sortFilter = { price: 1 };
+    }
+
+    //query filter
+    let search = req.query.search
+    let categoryFilter = {}
+    categoryFilter = {category:search}
+
+
     try {
-        let result = await productsModel.paginate({},{page, limit:6, lean:true })
         
-        result.prevLink = result.hasPrevPage ? `http://localhost:8080/products?page=${result.prevPage}` : '';
-        result.nextLink = result.hasNextPage ? `http://localhost:8080/products?page=${result.nextPage}` : '';
-        result.isValid = !(page < 1 || page > result.totalPages)
-        
-        
+
+    let result = await productsModel.paginate({},{page, limit:6, lean:true, sort:sortFilter})
+    
+    result.prevLink = result.hasPrevPage ? `?page=${result.prevPage}` : '';
+    result.nextLink = result.hasNextPage ? `?page=${result.nextPage}` : '';
+    result.isValid = !(page < 1 || page > result.totalPages) 
+
+   
+    // buscar por orden de precio ---  http://localhost:8080/products?page=1&sort=asc
+    if(sort){
+        result.prevLink = result.hasPrevPage ? `?page=${result.prevPage}&sort=${sort}` : '';
+        result.nextLink = result.hasNextPage ? `?page=${result.nextPage}&sort=${sort}` : '';
+        result.isValid = !(page < 1 || page > result.totalPages) 
+    }
+
+
+    // buscar por categoria ("Usado" / "Nuevos") ---   http://localhost:8080/products?page=1&search=Usado
+    if(search){
+        result = await productsModel.paginate(categoryFilter,{page, limit:6, lean:true, sort:sortFilter})
+      
+        result.prevLink = result.hasPrevPage ? `?page=${result.prevPage}&search=${search}` : '';
+        result.nextLink = result.hasNextPage ? `?page=${result.nextPage}&search=${search}` : '';
+        result.isValid = !(page < 1 || page > result.totalPages) 
+
+        // buscar por categoria y por orden de precio ---  http://localhost:8080/products?page=1&search=Usado&sort=asc
+        if(sort){
+            result.prevLink = result.hasPrevPage ? `?page=${result.prevPage}&search=${search}&sort=${sort}` : '';
+            result.nextLink = result.hasNextPage ? `?page=${result.nextPage}&search=${search}&sort=${sort}` : '';
+            result.isValid = !(page < 1 || page > result.totalPages) 
+        }
+    }
+
+
        res.render('products', {
            title: "Vista | Productos",
            styleProds: "styleProducts.css",
@@ -52,6 +96,10 @@ router.get('/', async (req,res)=>{
         res.status(500).send("Error interno del servidor");
     }
 })
+
+
+
+
 
 
 //* VISTA DE UN SOLO PRODUCTO

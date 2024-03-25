@@ -74,37 +74,6 @@ try {
 
 
 
-
-//! ACTUALIZAR PRODUCTOS EN CARRITO SELECCIONADO. 
-// PUT
-router.put('/:cid/', async (req,res)=>{
-    let { cid } = req.params
-    let {updateData} = req.body
-try {
-
-    let existingCart = await cartManager.getCartById(cid);
-    
-    if(existingCart){
-        let newProductsInCart = await cartManager.updateProductsInCart(cid, updateData)
-        return res.send({ msg: `El carrito con el ID ${cid} ha sido actualizado con éxito`, payload: newProductsInCart });
-    } else{
-        res.status(404).send({ error:`Carrito con el ID ${cid} no fue encontrado` });
-
-    }
-    
-    
-} catch (error) {
-    console.error('Error al actualizar la cantidad de un producto en este carrito:', error);
-
-    res.status(500).send({ status: 500, error:' Error al actualizar los productos en el carrito' });
-    
-}
-})
-
-
-
-
-
 //? ACTUALIZAR CANTIDAD (quantity) DE PRODUCTO SELECCIONADO EN CARRITO. 
 // PUT
 router.put('/:cid/product/:pid', async (req,res)=>{
@@ -128,6 +97,30 @@ router.put('/:cid/product/:pid', async (req,res)=>{
         res.status(500).send({ status: 500, error:' Error al actualizar la cantidad de un producto en este carrito' });
     }
 } )
+
+
+//! ACTUALIZAR PRODUCTOS EN CARRITO SELECCIONADO. 
+// PUT
+// router.put('/:cid/', async (req,res)=>{
+//     let { cid } = req.params
+//     let {updateData} = req.body
+// try {
+
+//     let existingCart = await cartManager.getCartById(cid);
+    
+//     if(existingCart){
+//         let newProductsInCart = await cartManager.updateProductsInCart(cid, updateData)
+//         return res.send({ msg: `El carrito con el ID ${cid} ha sido actualizado con éxito`, payload: newProductsInCart });
+//     } else{
+//         res.status(404).send({ error:`Carrito con el ID ${cid} no fue encontrado` });
+//     }
+    
+// } catch (error) {
+//     console.error('Error al actualizar la cantidad de un producto en este carrito:', error);
+
+//     res.status(500).send({ status: 500, error:' Error al actualizar los productos en el carrito' });
+// }
+// })
 
 
 

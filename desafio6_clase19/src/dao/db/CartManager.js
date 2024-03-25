@@ -75,31 +75,36 @@ export default class CartManager {
     }
 
 
-     
-//todo / PUT api/carts/:cid
-//? actualizar TODO el carrito con un producto. Debe recibir como body todo el arreglo de productos que queremos actualizar
+    
+    
     //! ACTUALIZAR PRODUCTOS EN CARRITO SELECCIONADO. 
+    // actualizar TODO el carrito con un producto. Debe recibir como body todo el arreglo de productos que queremos actualizar
     // REEMPLAZAR productos en carrito seleccionado mediante save
-    updateProductsInCart = async (cid, updateData) => {
-        try {
-            let cart = await cartsModel.findById(cid); // localizar carrito
-            console.log("CART",cart)
-            if(!cart ){
-                throw new Error(`Carrito con ID ${cid} no encontrado`);
-        }
-        // Actualizar los productos del carrito
-        cart.products = updateData; // Reemplazar todos los productos con los nuevos
-        console.log("CART.PRODUCTS",cart.products)
 
-        // Guardar los cambios en la base de datos
-        await cart.save();
+    // updateProductsInCart = async (cid, updateData) => {
+    //     try {
+    //         let cart = await cartsModel.findById(cid); // localizar carrito
+    //         console.log("CART",cart)
+    //         if(!cart ){
+    //             throw new Error(`Carrito con ID ${cid} no encontrado`);
+    //     }
+    //     // Actualizar los productos del carrito
+    //     cart.products = updateData; // Reemplazar todos los productos con los nuevos
+    //     console.log("CART.PRODUCTS",cart.products)
 
-        return cart;
-        } catch (error) {
-            console.error("No se pudo actualizar el carrito con los nuevos productos", error)
-            throw error;
-        }
-    }
+    //     // Guardar los cambios en la base de datos
+    //     await cart.save();
+
+    //     return cart;
+    //     } catch (error) {
+    //         console.error("No se pudo actualizar el carrito con los nuevos productos", error)
+    //         throw error;
+    //     }
+    // }
+
+
+
+
 
 
     //? ACTUALIZAR CANTIDAD (quantity) DE PRODUCTO SELECCIONADO EN CARRITO. 

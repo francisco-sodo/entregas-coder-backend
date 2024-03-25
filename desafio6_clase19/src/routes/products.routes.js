@@ -22,10 +22,11 @@ router.get('/', async (req, res) => {
     try {
         let products = await productManager.getProducts()
         let quantProducts = products.length;
-        
+
+
 
         let limit = parseInt(req.query.limit)
-
+       
         if (!isNaN(limit) && limit > 0) {
             // Verificar si el límite es mayor que el total de productos
             if (limit > quantProducts) {
