@@ -18,12 +18,6 @@ const initializePassport = () => {
 =============================================*/
 passport.use('github', new GitHubStrategy(
     {
-
-        // ecommerce_60220 OAuth app
-        // clientID: '4d76a5bf45e7438f8e4f',
-        // clientSecret: '83215f5412c56670556c90b3eebbdc1b08b33f0b',
-        // callbackUrl: 'http://localhost:8080/api/sessions/githubcallback'
-
         // ecommerce-60220 github app
         clientID: 'Iv1.75d13fcfc88fb83f',
         clientSecret: '3406534a85f8fa8e7d47cb4b7d9002f080d78fcb',
@@ -36,12 +30,12 @@ passport.use('github', new GitHubStrategy(
         try {
             const userEmail = profile._json.email;
             const user = await userModel.findOne({ email: userEmail });
-            // const user = await userModel.findOne({ email: profile._json.email });
+
             console.log("Usuario encontrado para login:")
             console.log(user);
             // si el usuario no se ha registrado anteriormente con github
             if(!user){
-                // console.warm("Usuario no existe con ese username: " + userEmail)
+                console.warm("Usuario no existe con ese username: " + userEmail)
                 let newUser = {
                     first_name: profile._json.name,
                     last_name:'',

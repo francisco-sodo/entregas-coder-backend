@@ -41,7 +41,7 @@ let userSession = req.session.user
 
 router.get("/profile", (req, res)=>{
   let user = req.session.user
-  console.log(user)
+  //console.log(user)
   res.render("profile", {
     user
   });
