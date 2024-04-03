@@ -8,7 +8,7 @@ export default class CartManager {
     }
 
 
-    //get
+    //get A1
     getCarts = async () => {
         try {
             let carts = await cartsModel.find();
@@ -21,7 +21,7 @@ export default class CartManager {
     }
 
 
-    //get by id
+    //get by id A2
     getCartById = async (_id) => {
         try {
             let cartById = await cartsModel.findOne({_id});
@@ -34,7 +34,7 @@ export default class CartManager {
     }
 
 
-    //post
+    //post A3
     addCart = async (cart) => {
         try {
             let newCart = await cartsModel.create(cart);
@@ -44,11 +44,9 @@ export default class CartManager {
             console.error('Error al crear un carrito', error);
             throw error;  
         }
-        
-      
     }
 
-    //post prod in cart
+    //post prod in cart A4
     addNewProductsInCart = async (cid, pid) => {
         try {
             let cart = await cartsModel.findById(cid);
@@ -76,39 +74,10 @@ export default class CartManager {
 
 
     
-    
-    //! ACTUALIZAR PRODUCTOS EN CARRITO SELECCIONADO. 
-    // actualizar TODO el carrito con un producto. Debe recibir como body todo el arreglo de productos que queremos actualizar
-    // REEMPLAZAR productos en carrito seleccionado mediante save
-
-    // updateProductsInCart = async (cid, updateData) => {
-    //     try {
-    //         let cart = await cartsModel.findById(cid); // localizar carrito
-    //         console.log("CART",cart)
-    //         if(!cart ){
-    //             throw new Error(`Carrito con ID ${cid} no encontrado`);
-    //     }
-    //     // Actualizar los productos del carrito
-    //     cart.products = updateData; // Reemplazar todos los productos con los nuevos
-    //     console.log("CART.PRODUCTS",cart.products)
-
-    //     // Guardar los cambios en la base de datos
-    //     await cart.save();
-
-    //     return cart;
-    //     } catch (error) {
-    //         console.error("No se pudo actualizar el carrito con los nuevos productos", error)
-    //         throw error;
-    //     }
-    // }
-
-
-
-
-
-
+  
     //? ACTUALIZAR CANTIDAD (quantity) DE PRODUCTO SELECCIONADO EN CARRITO. 
     // actualizar quantity de producto seleccionado en carrito mediante updateOne -> $set
+    // A5
     updateProductQuantity = async (cid, pid, quantity) => {
 
      try {
@@ -121,13 +90,12 @@ export default class CartManager {
             console.error('Error al modificar la cantidad de un producto en este carrito:', error);
             throw error;
         }
-    
     }
 
 
 
     //? VACIAR CARRITO. 
-    // vaciar todo el carrito mediante updateOne -> $set
+    // vaciar todo el carrito mediante updateOne -> $set A6
     clearCart = async (cid) => {
         try {
             let clearCart = await cartsModel.updateOne({ _id: cid }, { $set: { products: [] } });
@@ -142,6 +110,7 @@ export default class CartManager {
 
     //? ELIMINAR 1 PRODUCTO SELECCIONADO DENTRO DE CARRITO. 
     // eliminar 1 producto seleccionado dentro del carrito mediante updateOne -> $pull
+    // A7
     deleteProductInCart = async (cid, pid) => {
         try {
             let deleteProduct = await cartsModel.updateOne({ _id: cid }, { $pull: { products: { product: pid } } });
@@ -154,13 +123,6 @@ export default class CartManager {
     }
 
 
-
-// ELIMINAR CARRITO. (NO APLICAR)
-    // deleteCart = async (_id) => {
-    //     let deletecart = await cartsModel.deleteOne({_id});
-    //     return deletecart
-    // }
-  
 
 } //fin de la clase
 

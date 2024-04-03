@@ -17,7 +17,7 @@ const router = Router()
 
 
 //? MOSTRAR TODOS LOS CARRITOS
-//GET
+//GET A1
 router.get('/', async (req,res)=>{
     try {
         let carts = await cartManager.getCarts()
@@ -29,7 +29,7 @@ router.get('/', async (req,res)=>{
 })
 
 //? BUSCAR Y MOSTRAR UN CARRITO POR SU ID MEDIANTE REQ.PARAMS
-//GET
+//GET A2
 router.get('/:cid', async (req,res)=>{
     let { cid } = req.params
     try {
@@ -45,7 +45,7 @@ router.get('/:cid', async (req,res)=>{
 })
 
 //? CREAR Y AGREGAR CARRITOS
-//POST
+//POST A3
 router.post('/', async (req,res)=>{
     try {
         let newPost = await cartManager.addCart()
@@ -58,9 +58,10 @@ router.post('/', async (req,res)=>{
 
 
 
-//? CREAR Y AGREGAR PRODUCTOS AL CARRITO SELECCIONADO POR ID
-//POST
-router.post('/:cid/product/:pid', async (req,res)=>{
+
+//? MODIFICAR CARRITO. AGREGAR PRODUCTOS (CID) AL CARRITO.
+//POST A4
+router.put('/:cid/product/:pid', async (req,res)=>{
     let { cid, pid } = req.params
 try {
     let newProductInCart = await cartManager.addNewProductsInCart(cid,pid)
@@ -73,17 +74,13 @@ try {
 })
 
 
-
-//? ACTUALIZAR CANTIDAD (quantity) DE PRODUCTO SELECCIONADO EN CARRITO. 
-// PUT
-router.put('/:cid/product/:pid', async (req,res)=>{
+//? ACTUALIZAR SOLO CANTIDAD (quantity) DE PRODUCTO SELECCIONADO EN CARRITO. 
+// PUT A5
+router.patch('/:cid/product/:pid', async (req,res)=>{
     let { cid, pid } = req.params;
     let {quantity} = req.body;
-    // console.log(typeof(quantityUpdate))
-    // console.log(quantityUpdate)
-
+    
     try {
-
         //todo -->  aca falta verificar si el id del producto a modificar existe. 200/404.
 
         let newQuantity = await cartManager.updateProductQuantity(cid, pid, quantity);
@@ -99,36 +96,10 @@ router.put('/:cid/product/:pid', async (req,res)=>{
 } )
 
 
-//! ACTUALIZAR PRODUCTOS EN CARRITO SELECCIONADO. 
-// PUT
-// router.put('/:cid/', async (req,res)=>{
-//     let { cid } = req.params
-//     let {updateData} = req.body
-// try {
-
-//     let existingCart = await cartManager.getCartById(cid);
-    
-//     if(existingCart){
-//         let newProductsInCart = await cartManager.updateProductsInCart(cid, updateData)
-//         return res.send({ msg: `El carrito con el ID ${cid} ha sido actualizado con éxito`, payload: newProductsInCart });
-//     } else{
-//         res.status(404).send({ error:`Carrito con el ID ${cid} no fue encontrado` });
-//     }
-    
-// } catch (error) {
-//     console.error('Error al actualizar la cantidad de un producto en este carrito:', error);
-
-//     res.status(500).send({ status: 500, error:' Error al actualizar los productos en el carrito' });
-// }
-// })
-
-
-
-
 
 
 //? VACIAR CARRITO.
-// DELETE
+// DELETE A6
 router.delete('/:cid', async (req,res)=>{
     let { cid } = req.params
     try {
@@ -145,7 +116,7 @@ router.delete('/:cid', async (req,res)=>{
 })
 
 //? ELIMINAR 1 PRODUCTO SELECCIONADO DENTRO DE CARRITO. 
-// DELETE
+// DELETE A7
 router.delete('/:cid/product/:pid', async (req,res)=>{
     let { cid, pid } = req.params
     try {
@@ -161,29 +132,6 @@ router.delete('/:cid/product/:pid', async (req,res)=>{
     }
 })
 
-
-
-
-
-
-
-
-
-// DELETE PARA ELIMINAR EL CARRITO POR SU ID MEDIANTE REQ.PARAMS (no aplicar)
-// router.delete('/:cid', async (req,res)=>{
-//     let { cid } = req.params
-//     try {
-//         let cartId = await cartManager.deleteCart(cid)
-//         console.log("ACKNOWLEDGED", cartId)
-
-//         cartId
-// /       ? res.send({ msg: `Carrito con el ID ${cid} eliminado`})
-//         : res.status(404).send({ error:`Carrito con el ID ${cid} no pudo ser eliminado` });
-   
-//     } catch (error) {
-//         res.status(500).send({ status: 500, error: 'Error al querer eliminar un carrito por ID' });
-//     }
-// })
 
 
 
