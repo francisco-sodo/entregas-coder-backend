@@ -1,0 +1,108 @@
+<main class="main-container">
+
+ 
+    <nav class="nav">
+{{#if user}}
+        <div class="user">
+            <h2>Bienvenido {{user.name}}!</h2>
+        </div>
+         <div>
+            {{!-- <button>Log Out</button> --}}
+            {{!-- <a href="/user/profile">Perfil</a> --}}
+             <a href="/user/current-user">Perfil</a>
+        </div>
+        <div>
+            {{!-- <button>Log Out</button> --}}
+            <a href="/user/logout">Logout</a>
+        </div>
+    {{else}}
+        <div>
+            <a href="/user/login">Login</a>
+        </div>
+{{/if}}
+    </nav>
+   
+    
+
+     
+    
+
+
+
+    {{!--* 1 --}}
+    <div>
+        <h1>Lista de Productos HB</h1>
+    </div>
+    {{!--* /1 --}}
+
+
+    {{#if isValid}} {{!-- Si hay productos (documentos) para mostrar --}}
+
+
+    {{!--* 3 --}}
+    <section class="cards-container">
+
+
+
+         {{!--* 2 --}}
+    <div class="paginate-controls-container">
+        <div>
+            {{#if prevLink}} {{!-- Si hay pagina previa --}}
+            <a href={{prevLink}}> << Anterior</a>
+            {{/if}}
+            &nbsp;
+            {{currentPage}} /&nbsp;{{totalPages}}
+            &nbsp;
+            {{#if nextLink}}
+            <a href={{nextLink}}> Siguiente >></a>
+            {{/if}}
+        </div>
+        <div>
+            <b>{{totalDocs}}</b> Productos encontrados
+        </div>
+    </div>
+    {{!--* /2 --}}
+
+
+
+
+
+        {{#each products}} {{!-- por cada documento/producto... --}}
+
+        <div class="card">
+            <div class="img-card-container">
+                <img src="{{this.thumbnails}}" alt="{{this.title}}">
+            </div>
+            <ul>
+                <li><h2>{{this.title}}</h2></li>
+                <li><h4><b>Precio: </b>${{this.price}}</h4></li>
+                <li><b>Descripción:</b> {{this.description}}</li>
+                <li><b>Código:</b> {{this.code}}</li>
+                <li><b>Status:</b> {{this.status}}</li>
+                <li><b>Stock:</b> {{this.stock}}</li>
+                <li><b>Categoría:</b> {{this.category}}</li>
+            </ul>
+            <button>Agregar al Carrito</button>
+        </div>
+
+        {{/each}}
+    </section>
+    {{!--* /3 --}}
+
+    
+
+
+    {{else}}
+
+
+    {{!--* 4 --}}
+    <h4>No hay productos para mostrar</h4>
+    <button id="">Volver al inicio</button>
+    {{!--* /4 --}}
+
+    {{/if}}
+
+</main>
+
+{{!-- TODO logica en public --}}
+{{!-- <script src="/js/products.js"></script> --}}

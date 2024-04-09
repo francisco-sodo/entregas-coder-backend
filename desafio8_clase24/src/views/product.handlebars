@@ -1,0 +1,27 @@
+
+{{#each product}} {{!-- por cada documento/producto... --}}
+
+        <div class="card">
+            <div class="img-card-container">
+                <img src="{{this.thumbnails}}" width="200" alt="{{this.title}}">
+            </div>
+            <ul>
+                <li><h2>{{this.title}}</h2></li>
+                <li><h4><b>Precio: </b>${{this.price}}</h4></li>
+                <li><b>Descripción:</b> {{this.description}}</li>
+                <li><b>Código:</b> {{this.code}}</li>
+                <li><b>Status:</b> {{this.status}}</li>
+                <li><b>Stock:</b> {{this.stock}}</li>
+                <li><b>Categoría:</b> {{this.category}}</li>
+            </ul>
+            <button>Agregar al Carrito</button>
+            <button>Comprar</button>
+        </div>
+
+        {{/each}}
+
+
+
+
+        {{!-- TODO logica en public --}}
+        {{!-- <script src="/js/product.js"></script> --}}
