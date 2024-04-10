@@ -17,22 +17,17 @@ export default class UsersExtendRouter extends CustomRouter {
         }) 
 
         // currentUser = el perfil del usuario
-        this.get("/current-user", ["USER", "USER_PREMIUM"], (req, res) => {
+        this.get("/current-user", ["USER", "ADMIN"], (req, res) => {
             res.sendSuccess(req.user);
         });
 
-
-        this.get("/premium-user", ["USER_PREMIUM"], (req, res) => {
-            res.sendSuccess(req.user);
-        });
 
         this.get("/admin-user", ["ADMIN"], (req, res) => {
-           
             res.sendSuccess(req.user);
-        
         });
 
-
+   
+    
 
         /*=============================================
         =                    LOGIN                    =
@@ -87,7 +82,7 @@ export default class UsersExtendRouter extends CustomRouter {
         =                  REGISTER                  =
         =============================================*/
         this.post("/register", ["PUBLIC"], async (req, res) => {
-            const { first_name, last_name, email, age, password} = req.body;
+            const { first_name, last_name, email, age, password, role} = req.body;
             console.log("Registrando usuario:");
             console.log(req.body);
 
@@ -100,7 +95,8 @@ export default class UsersExtendRouter extends CustomRouter {
                 last_name,
                 email,
                 age,
-                password: createHash(password)
+                password: createHash(password),
+                role
             };
             const result = await userService.save(user);
             res.status(201).send({ status: "success", message: "Usuario creado con extito con ID: " + result.id });
@@ -142,6 +138,22 @@ export default class UsersExtendRouter extends CustomRouter {
             )
             // res.redirect('/users')
             res.redirect("/products");
+        })
+
+
+        this.get('/all',["PUBLIC"], async(req,res) =>{
+
+            try {
+                const allUsers = await userService.getAll();
+                if(!allUsers) return res.status(202).send({error: "No hay usuarios para mostrar"})
+
+                res.sendSuccess(allUsers)
+                console.log("TOTAL DE USUARIOS: " + allUsers.length)
+                
+            } catch (error) {
+                return res.status(500).send({ status: "error", error: "Error interno de la applicacion." });
+
+            }
         })
 
 

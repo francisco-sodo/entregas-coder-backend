@@ -18,7 +18,8 @@ const router = Router()
 
 //*PAGINATION con HB. VISTA DE TODOS LOS PRODUCTOS
 // EJ: http://localhost:8080/products?page=1
-router.get('/', passportCall('jwt'), authorization('user'), async (req,res)=>{
+//router.get('/', passportCall('jwt'), authorization('user'), async (req,res)=>{
+router.get('/', passportCall('jwt'), async (req,res)=>{
 //router.get('/', async (req,res)=>{
 
 
