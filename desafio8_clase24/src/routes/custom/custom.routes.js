@@ -1,6 +1,6 @@
 import { Router } from "express";
-import jwt from "jsonwebtoken"; // para handlePolicies()
-import { PRIVATE_KEY } from "../../utils.js"; // para handlePolicies()
+import jwt from "jsonwebtoken"; 
+import { PRIVATE_KEY } from "../../utils.js";
 
 
 
@@ -49,10 +49,6 @@ export default class CustomRouter {
             this.generateCustomResponses,
             this.applyCallbacks(callbacks));
     };
-
-
-
-
 
 
 

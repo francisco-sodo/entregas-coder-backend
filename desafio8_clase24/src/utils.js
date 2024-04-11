@@ -21,7 +21,6 @@ const storage = multer.diskStorage({
         cb(null, `${__dirname}/public/img/`)
         //cb(null, `${__dirname}/src/public/img`)
     },
-
     // el nombre que quiero que tengan los archivos que voy a subir
     filename: function (req, file, cb) {
         cb(null, `${Date.now()}-${file.originalname}`)
@@ -30,7 +29,6 @@ const storage = multer.diskStorage({
 
 export const uploader = multer({
     storage,
-    // si se genera algun error, lo capturamos
     onError: function (err, next) {
         console.log(err);
         next();
@@ -60,35 +58,6 @@ export const PRIVATE_KEY = "CoderhouseBackendCourseSecretKeyJWT";
 export const generateJWToken = (user) => {
     return jwt.sign( {user} ,PRIVATE_KEY, { expiresIn: '1h'} );
 };
-// Esta funcion me retorna un TokenJWT: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
-
-
-// 2) FUNCION PARA AUTENTICAR Y VERIFICAR TOKEN
-// export const authToken = (req, res, next) =>{
-//     //El TokenJWT se guarda en los headers de autorización.
-//     const authHeader = req.headers.authorization
-//     // Beare eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
-//     console.log("Token present in header auth:");
-//     console.log(authHeader);
-
-//     // si no me retorna token...
-//     if (!authHeader) {
-//         return res.status(401).send({ error: "User not authenticated or missing token."})
-//     }
-//     // si me retorna token...
-//     const token = authHeader.split(' ')[1] // Se hace el split para retirar la palabra Bearer. Me queda el token limpio.
-//     //Validar token
-//     jwt.verify(token, PRIVATE_KEY, (error, credentials) =>{
-//         //error token
-//         if (error) return res.status(403).send({error: "Token invalid, Unauthorized!" })
-//         //ok token
-//         req.user = credentials.user; //accedo al usuario que viene dentro de ese token
-//         console.log('REQ.USER DESDE UTILS');
-//         console.log(req.user);
-//         next()
-//     })
-// };
-
 
 
 /*=============================================

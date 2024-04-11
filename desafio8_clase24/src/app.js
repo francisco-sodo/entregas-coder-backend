@@ -2,10 +2,6 @@ import express from "express";
 import __dirname from './utils.js';
 import handlebars from 'express-handlebars'
 
-
-// imports mongo mongoose sessions
-// import session from 'express-session';
-// import MongoStore from 'connect-mongo';
 import mongoose from 'mongoose';
 
 //imports passport
@@ -61,9 +57,9 @@ app.use(express.urlencoded({ extended: true }))
 =      configuracion Middleware de HBS         =
 =============================================*/
 app.engine('handlebars', handlebars.engine());
-app.set('views', __dirname + '/views'); // Carpeta views. Aca van a estar las plantillas de HB
+app.set('views', __dirname + '/views'); 
 app.set('view engine', 'handlebars');
-app.use(express.static(__dirname + '/public'));//Indicamos que vamos a trabajar con archivos estaticos en carpeta public para alojar css, js..
+app.use(express.static(__dirname + '/public'));
 
 
 const URL_MONGO = 'mongodb+srv://fanky1986:LOmyNfS0kmmTHZZ4@cluster0.ptjuvdn.mongodb.net/ecommerce?retryWrites=true&w=majority&appName=Cluster0'

@@ -10,8 +10,7 @@ form.addEventListener('submit', e =>{
     const obj = {}
     data.forEach((value, key)=> obj[key] = value)
    
-    // generamos el obj. Ahora hay queenviarlo mediante fetch
-// el fetch me permite hacer request a las APIS
+    // generamos el obj. Ahora hay queenviarlo mediante fetch para hacer request a las APIS
     fetch('/api/extend/users/login', {
         method: 'POST', //especificamos metodo
         body:  JSON.stringify(obj),// pasamos el contenido en json stringify
@@ -22,8 +21,7 @@ form.addEventListener('submit', e =>{
             .then(json => {
                 console.log("Cookies generadas:");
                 console.log(document.cookie);
-                //alert("Login realizado con exito!");
-                window.location.replace('/products')// si es exitoso, redireccionamos a la pagina del login para que se loguee.
+                window.location.replace('/products')// si es exitoso, redireccionamos a productos
             })
         } else if (result.status === 401) {
             console.log(result);

@@ -6,7 +6,7 @@ const router = Router();
 
 //? aca solo van los renders para las plantillas handlebars
 
-// la idea es que cuando el usuario se logee pueda ver los productos
+
 router.get("/login", (req, res) => {
   res.render('login',{
     title: "Login" ,
@@ -22,7 +22,7 @@ router.get("/register", (req, res) => {
    
 });
 
-//    '/user'
+
 // Cuando ya tenemos una jwt activa con los datos del user, renderizamos la vista products
 router.get("/", passportCall('jwt'), (req, res) => {
 res.redirect('/user/current-user')
@@ -47,7 +47,7 @@ router.get("/current-user", passportCall('jwt'), (req, res)=>{
 router.get("/admin-user", passportCall('jwt'), authorization('admin'), (req, res)=>{
     res.render('admin',{
       title: "Admin" ,
-      user: req.user
+      user: req.user,
     })
 });
 

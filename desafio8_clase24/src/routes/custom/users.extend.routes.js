@@ -16,13 +16,17 @@ export default class UsersExtendRouter extends CustomRouter {
             res.sendSuccess(req.user) // este es el payload
         }) 
 
-        // currentUser = el perfil del usuario
+      
         this.get("/current-user", ["USER", "ADMIN"], (req, res) => {
             res.sendSuccess(req.user);
         });
 
 
         this.get("/admin-user", ["ADMIN"], (req, res) => {
+           res.sendSuccess(req.user);
+        });
+
+        this.get("/premium-user", ["PREMIUM"], (req, res) => {
             res.sendSuccess(req.user);
         });
 
@@ -60,11 +64,10 @@ export default class UsersExtendRouter extends CustomRouter {
                 // almacenando jwt en Cookies
                 res.cookie('jwtCookieToken', access_token,
                 {
-                    maxAge: 600000, //10 min
+                    maxAge: 600000, 
                     httpOnly: true //No se expone la cookie
                 })
                 
-                //res.sendSuccess({access_token:access_token, id:user._id})
                 res.send({ message: "Login successful!", access_token: access_token, id: user._id });
                
 
@@ -136,11 +139,14 @@ export default class UsersExtendRouter extends CustomRouter {
                     httpOnly: true //No se expone la cookie
                 }
             )
-            // res.redirect('/users')
             res.redirect("/products");
         })
 
 
+
+
+
+        // get all users
         this.get('/all',["PUBLIC"], async(req,res) =>{
 
             try {

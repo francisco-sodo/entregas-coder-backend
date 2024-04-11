@@ -18,9 +18,9 @@ const router = Router()
 
 //*PAGINATION con HB. VISTA DE TODOS LOS PRODUCTOS
 // EJ: http://localhost:8080/products?page=1
-//router.get('/', passportCall('jwt'), authorization('user'), async (req,res)=>{
+
 router.get('/', passportCall('jwt'), async (req,res)=>{
-//router.get('/', async (req,res)=>{
+
 
 
 
@@ -117,7 +117,6 @@ router.get('/product/:pid', async (req,res)=>{
             res.status(404).send({ status: 404, error: 'No se encontró el producto' });
             return;
         }
-        // res.send(product)
         res.render('product', {
             title: "Vista | Producto",
             product: product.map(item => ({

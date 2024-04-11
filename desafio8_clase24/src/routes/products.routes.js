@@ -24,7 +24,6 @@ router.get('/', async (req, res) => {
         let quantProducts = products.length;
 
 
-
         let limit = parseInt(req.query.limit)
        
         if (!isNaN(limit) && limit > 0) {
@@ -45,7 +44,7 @@ router.get('/', async (req, res) => {
 
 })
 
-
+// buscar producto por titulo
 router.get('/:word([a-zA-Z%C3%A1%C3%A9%20]+)', async (req, res) => {
     let word = req.params.word
         try {
