@@ -17,18 +17,16 @@ export default class UsersExtendRouter extends CustomRouter {
         }) 
 
       
-        this.get("/current-user", ["USER", "ADMIN"], (req, res) => {
+        this.get("/current-user", ["USER", "ADMIN", "PREMIUM"], (req, res) => {
             res.sendSuccess(req.user);
         });
 
 
         this.get("/admin-user", ["ADMIN"], (req, res) => {
            res.sendSuccess(req.user);
+          
         });
 
-        this.get("/premium-user", ["PREMIUM"], (req, res) => {
-            res.sendSuccess(req.user);
-        });
 
    
     
@@ -44,11 +42,12 @@ export default class UsersExtendRouter extends CustomRouter {
                 console.log(user);
                 if (!user) {
                     console.warn("User doesn't exists with username: " + email);
-                    return res.status(202).send({ error: "Not found", message: "Usuario no encontrado con username: " + email });
+                
+                    return res.sendNotFoundResource({message: "Usuario no encontrado con username: " + email})
                 }
                 if (!isValidPassword(user, password)) {
                     console.warn("Invalid credentials for user: " + email);
-                    return res.status(401).send({ status: "error", error: "El usuario y la contraseña no coinciden!" });
+                    return res.sendUnauthorizedError({error:"User not authenticated or missing token."})
                 }
                 const tokenUser = {
                     name: `${user.first_name} ${user.last_name}`,
@@ -67,14 +66,12 @@ export default class UsersExtendRouter extends CustomRouter {
                     maxAge: 600000, 
                     httpOnly: true //No se expone la cookie
                 })
-                
-                res.send({ message: "Login successful!", access_token: access_token, id: user._id });
-               
+               res.sendSuccess({access_token: access_token, id: user._id})
 
 
             } catch (error) {
                 console.error(error);
-                return res.status(500).send({ status: "error", error: "Error interno de la applicacion." });
+                return res.sendInternalServerError({error:"Internal Server Error"})
             }
         });
 
@@ -91,7 +88,7 @@ export default class UsersExtendRouter extends CustomRouter {
 
             const exists = await userService.findByUsername(email);
             if (exists) {
-                return res.status(400).send({ status: "error", message: "Usuario ya existe." });
+                return res.sendClientError({message:` Usuario ${email} ya existe.`})
             }
             const user = {
                 first_name,
@@ -102,7 +99,8 @@ export default class UsersExtendRouter extends CustomRouter {
                 role
             };
             const result = await userService.save(user);
-            res.status(201).send({ status: "success", message: "Usuario creado con extito con ID: " + result.id });
+            res.sendSuccess({message: "Usuario creado con extito con ID: " + result.id})
+             
         });
 
 

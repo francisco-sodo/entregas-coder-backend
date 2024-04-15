@@ -25,7 +25,7 @@ router.get("/register", (req, res) => {
 
 // Cuando ya tenemos una jwt activa con los datos del user, renderizamos la vista products
 router.get("/", passportCall('jwt'), (req, res) => {
-res.redirect('/user/current-user')
+//res.redirect('/user/current-user')
 
   res.render('products',{
     title: "User | Products",
@@ -62,7 +62,7 @@ router.get("/logout", (req, res) => {
 });
 
 
-// todo implementar esta vista
+// todo-  implementar esta vista
 router.get("/error", (req, res)=>{
   res.render("error");
 });

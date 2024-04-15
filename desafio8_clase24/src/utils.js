@@ -83,6 +83,14 @@ export const passportCall = (strategy) => {
 };
 
 
+
+/*=============================================
+=                 AUTHTOKEN                  =
+=============================================*/
+//fue sacada de utils.js y llevada a users.extend.routes.js, dentro de la funcion handlePolicies.
+
+
+
 /*=============================================
 =                    ROLES                    =
 =============================================*/

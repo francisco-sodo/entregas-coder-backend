@@ -24,7 +24,7 @@ export default class CustomRouter {
         console.log("Entrando por GET a custom router con Path: " + path);
         this.router.get(path,
             this.handlePolicies(policies),
-            this.generateCustomResponses,// desde aca, ya esta apto para que la herencia use los customResponse
+            this.generateCustomResponses,// ya esta apto para que el extend use los customResponse
             this.applyCallbacks(callbacks)
         )
     }
@@ -77,7 +77,7 @@ export default class CustomRouter {
             //Token OK
             const user = credentials.user;
 
-            // Preguntamos si dentro del array policies no se encuentra el rol (user.role) que me esta llegando con este usuario
+        
             if (!policies.includes(user.role.toUpperCase())) 
             return res.status(403).send({ error: "El usuario no tiene privilegios, revisa tus roles!" });
            
@@ -94,6 +94,7 @@ export default class CustomRouter {
     generateCustomResponses = (req, res, next) => {
         // Custom responses
         res.sendSuccess = payload => res.status(200).send({ status: "Success", payload })
+        res.sendNotFoundResource = error => res.status(202).send({ status: "Not Found", error })
         res.sendInternalServerError = error => res.status(500).send({ status: "Error", error })
         res.sendClientError = error => res.status(400).send({ status: "Client Error, Bad request from client.", error });
         res.sendUnauthorizedError = error => res.status(401).send({ error: "User not authenticated or missing token.", error });
