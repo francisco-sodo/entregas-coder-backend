@@ -1,4 +1,6 @@
 import { Command } from "commander";
+// import dotenv from "dotenv";
+
 
 const program = new Command(); //Crea la instancia de comandos de commander.
 
@@ -11,8 +13,10 @@ program
 program.parse() // paesea los comando y valida si son correctos. Cierra.
 
 
-//console.log('Option:', program.opts());// accedo a todos los options
-//console.log('Option Port:', program.opts().p);
+// dotenv.config();
+
+console.log('Option:', program.opts());// accedo a todos los options
+console.log('Option Port:', program.opts().p);
 console.log('Option Mode:', program.opts().mode);// esto lo voy a usar en config.js
 
 // LISTENERS. Metodos de escucha para eventos de process (node server)

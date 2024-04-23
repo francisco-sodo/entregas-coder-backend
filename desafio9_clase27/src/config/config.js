@@ -15,7 +15,7 @@ dotenv.config({
 export default { // esto lo va a consumir app.js
     port: process.env.SERVER_PORT,
     mongoUrl: process.env.MONGO_URL,
-    adminName: process.env.ADMIN_NAME,
+    adminEmail: process.env.ADMIN_EMAIL,
     adminPassword: process.env.ADMIN_PASSWORD,
     githubClientId: process.env.GITHUB_CLIENT_ID,
     githubClientSecret: process.env.GITHUB_CLIENT_SECRET,
