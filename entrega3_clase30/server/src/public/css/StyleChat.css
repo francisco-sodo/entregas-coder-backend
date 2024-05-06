@@ -1,0 +1,105 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+body{
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.main_chatroom{
+    width: 100%;
+    height: 100vh;
+    background: rgb(119,135,218);
+    background: radial-gradient(circle, rgba(119,135,218,1) 0%, rgba(97,70,252,1) 100%);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 50px;
+}
+.main_chatroom-container{
+    width:500px ;
+    height: 80vh;
+    padding: 2em;
+    border-radius: 20px;
+    background-color: rgba(134, 255, 47, 0.5);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    box-shadow: 0px 0px 8px 3px rgba(0,0,0,0.1);
+    -webkit-box-shadow: 0px 0px 8px 3px rgba(0,0,0,0.1);
+    -moz-box-shadow: 0px 0px 8px 3px rgba(0,0,0,0.1);
+    /* align-items: center; */
+   
+}
+.title-container{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.main_chatroom-container .title-container h1{
+    font-size: 1rem;
+}
+.main_chatroom-container .title-container button{
+    cursor: pointer;
+    padding: .6em;
+    border-radius: 8px;
+    background-color: transparent;
+    border: 1px solid orangered;
+   color: orangered;
+}
+.main_chatroom-container .title-container button:hover{
+    
+    background-color: orangered;
+    border: 1px solid orangered;
+    color: white;
+}
+
+.white{
+    color: bisque;
+}
+
+.mensajes{
+    height: 700px;
+    width: 100%;
+    border: 1px solid white;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    margin: 1em auto;
+    overflow-y:scroll;
+}
+
+.mensajes-container{
+    padding: 1em 0 2em 1em;
+}
+
+.logs{
+    color:rgb(255, 255, 255);
+    font-family: 'Courier New', Courier, monospace;
+    margin-bottom: 0.5em;
+}
+
+
+
+
+.actions{
+    display: block;
+}
+
+.actions div input{
+    width: 100%;
+    padding: 1em;
+    border-radius: 8px;
+    border-style: none;
+}
+.actions div input::placeholder{
+   font-size: .75rem;
+}
+
+
+.swalId h2{
+    font-size: 1rem;
+}
