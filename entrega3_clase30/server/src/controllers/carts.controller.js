@@ -5,7 +5,7 @@
 
 //repository
 //import { userService } from '../services/service.js';
-import { cartService } from '../services/service.js';
+import { cartService, productService, ticketService } from '../services/service.js';
 
 
 
@@ -45,14 +45,21 @@ export const getCartById = async (req, res) => {
 //post A3
 //? CREAR CARRITOS
 export const createCart = async (req, res) => {
+   
     try {
+      
         let newPost = await cartService.create()
         res.send(newPost);
+    
        
     } catch (error) {
         res.status(500).send({ status: 500, error: 'Error al agregar un nuevo carrito' });
     }
 }
+
+
+
+
 
 //put prod in cart A4
 //? AGREGAR PRODUCTOS (CID) AL CARRITO.
@@ -60,12 +67,17 @@ export const updateProductInCart = async (req, res) => {
     let { cid, pid } = req.params
     try {
         let newProductInCart = await cartService.update(cid,pid)
+        newProductInCart = await cartService.getById(cid)
         res.send(newProductInCart)
     
     } catch (error) {
         res.status(500).send({ status: 500, error:' Error al agregar un producto a un carrito' });  
     }
 }
+
+
+
+
 
 // A5
 //? ACTUALIZAR SOLO CANTIDAD (quantity) DE PRODUCTO SELECCIONADO EN CARRITO. 
@@ -127,19 +139,102 @@ export const clearCart = async (req, res) => {
 
 
 
-// A8
-//todo FINALIZAR COMPRA PRODUCTO.
-export const purchaseProductInCart = async (req, res) => {
-    let { cid, pid } = req.params
-    let {quantity} = req.body;
-    try {
-        let purchaseProd = await cartService.purchase(cid,pid,quantity)
-        //console.log("ACKNOWLEDGED", purchaseProd)
 
-        purchaseProd
-        ? res.send({ msg: `Producto con el ID ${pid} fue comprado con exito`})
-        : res.status(404).send({ error:`Producto con el ID ${pid} no pudo ser comprado` });
+
+
+
+
+// A8
+//? FINALIZAR COMPRA.
+
+
+export const purchaseProduct = async (req, res) => {
+    let { cid } = req.params
+    let user = req.user
    
+
+    //console.log("USERID::::::::::::::::::",userId) //!undefined
+   
+   
+    try {
+        // Obtener el carrito por su ID
+        const cart = await cartService.getById(cid);
+        if (!cart) {
+            return res.status(404).send({ error: `El carrito con el ID ${cid} no fue encontrado` });
+        }
+
+
+        // Iterar sobre los productos del carrito para finalizar la compra
+        const productsPurchased = [];
+        const productsNotPurchased = [];
+
+        for (const product of cart.products) {
+            // Obtener el producto de la base de datos por su ID
+            const productDetails = await productService.getById(product.product);
+            if (!productDetails) {
+                productsNotPurchased.push(product.product);
+                continue;
+            }
+            // Verificar si hay suficiente stock del producto
+            if (productDetails.stock >= product.quantity) {
+                // Restar la cantidad comprada del stock del producto
+                productDetails.stock -= product.quantity;
+                await productDetails.save();
+                // Agregar el producto a la lista de productos comprados
+                productsPurchased.push(product.product);
+            } else {
+                // Agregar el producto a la lista de productos que no pudieron ser comprados
+                productsNotPurchased.push(product.product);
+            }
+        }
+
+
+        // calcular total de compra
+        const calculateTotalAmount = async (cart) => {
+            let totalAmount = 0;
+            try {
+                for (const product of cart.products) {
+                    // Obtener los detalles del producto de la base de datos por su ID
+                    const productDetails = await productService.getById(product.product);
+                    if (!productDetails) {
+                        // Manejar el caso donde los detalles del producto no se encuentran
+                        continue;
+                    }
+                    // Agregar el precio del producto multiplicado por la cantidad al totalAmount
+                    totalAmount += productDetails.price * product.quantity;
+                }
+            } catch (error) {
+                console.error('Error al calcular el monto total de la compra:', error);
+                // Si hay un error al calcular el monto, puedes retornar 0 o manejarlo de otra forma según tu lógica de negocio
+                return 0;
+            }
+            return totalAmount;
+        };
+
+
+
+        //Generar ticket con los detalles de la compra
+        const ticketDetails = {
+            amount: await calculateTotalAmount(cart),
+            purchaser: user.id,
+        };
+        const generatedTicket = await ticketService.generateTicket(ticketDetails);
+
+        // Actualizar el carrito para contener solo los productos que no se pudieron comprar
+        cart.products = cart.products.filter(product => !productsPurchased.includes(product.product));
+        await cart.save();
+
+          // Enviar respuesta al cliente con los productos comprados, los que no pudieron ser comprados y el ticket generado
+          res.send({
+            purchased: productsPurchased,
+            notPurchased: productsNotPurchased,
+            ticket: generatedTicket,
+        });
+        
+      
+        
+        
+
     } catch (error) {
         res.status(500).send({ status: 500, error: 'Error al querer finalizar la compra del producto' });
     }
@@ -147,25 +242,16 @@ export const purchaseProductInCart = async (req, res) => {
 
 
 
-//!
-export const addToCart = async (req, res) => {
-    try {
-        // Obtiene el ID del usuario desde la solicitud (suponiendo que esté disponible)
-        const uid = req.user._id;
 
-        // Obtiene el ID del producto que se va a agregar al carrito desde la solicitud
-        const pid = req.body.productId;
 
-        // Agrega el producto al carrito del usuario
-        const result = await cartService.addToCart(uid, pid);
-        console.log(":::RESULT ADD TO CART" + result)
 
-        res.sendSuccess({ message: 'Producto agregado al carrito exitosamente' });
-    } catch (error) {
-        console.error(error);
-        res.sendInternalServerError({ error: 'Error al agregar producto al carrito' });
-    }
-};
+
+
+
+
+
+
+
 
 
 

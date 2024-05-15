@@ -37,9 +37,7 @@ router.delete('/:pid', passportCall('jwt'),authorization('admin'), ProductContro
 
 
 
-//!
-// Comprar un producto
-router.post("/:productId/buy", passportCall("jwt"), ProductController.buyProduct);
+
 
 
 

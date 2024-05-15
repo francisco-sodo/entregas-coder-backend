@@ -1,5 +1,6 @@
 import CustomRouter from './custom.routes.js';
 import passport from 'passport';
+import jwt from 'jsonwebtoken';
 
 import * as UserController from '../../controllers/users.controller.js'
 
@@ -16,21 +17,22 @@ export default class UsersExtendRouter extends CustomRouter {
 
       
         this.get("/current", ["USER", "ADMIN", "PREMIUM"], (req, res) => {
-            res.sendSuccess(req.user);
+            
+            const token = req.headers.authorization
+            const tokenNormalice = token.split(' ')[1]
+            console.log(tokenNormalice, " :::::::::::::::::::::::::::")
+            const decodeToken = jwt.decode(tokenNormalice)
+            res.sendSuccess(decodeToken);
         });
 
 
         this.get("/current/admin", ["ADMIN"], (req, res) => {
            res.sendSuccess(req.user);
-          
         });
 
         this.get("/current/user", ["USER"], (req, res) => {
             res.sendSuccess(req.user);
-           
          });
-
-
 
          //GET ALL USERS
          this.get('/all',["PUBLIC"],UserController.getAllUsers)
@@ -45,6 +47,9 @@ export default class UsersExtendRouter extends CustomRouter {
         // ? LOGIN Y REGISTER ABIERTO PUBLICAMENTE 
         // LOGIN
         this.post('/login', ['PUBLIC'], UserController.userLogin) 
+
+        // LOGOUT
+        this.get('/logout', ['PUBLIC'], UserController.userLogout)
 
         // REGISTER
         this.post('/register', ['PUBLIC'], UserController.userRegister) 

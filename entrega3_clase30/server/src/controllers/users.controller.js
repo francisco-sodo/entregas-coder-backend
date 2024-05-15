@@ -3,9 +3,8 @@ import { createHash, isValidPassword, generateJWToken } from "../utils.js";
 import { userService } from "../services/service.js";
 import { cartService } from "../services/service.js";
 
-//todo / dto implementar.
-//! DONDE HACEMOS EL DTO? EN EL REGISTER, EN EL LOGIN O POR SEPARADO EN OTRO METODO (CREATEUSER)?
-//import UsersDto from "../services/dto/user.dto.js";
+import UsersDto from "../services/dto/user.dto.js";
+
 
 
 
@@ -13,40 +12,43 @@ import { cartService } from "../services/service.js";
 /*=============================================
 =                  REGISTER                  =
 =============================================*/
+
+
 export const userRegister = async (req, res) => {
+  try {
+      const { first_name, last_name, email, age, password, role } = req.body;
+      
+      // Verificar si el usuario ya existe
+      const exists = await userService.getByUserName(email);
+      if (exists) {
+          return res.sendClientError({ message: `El usuario ${email} ya existe.` });
+      }
 
+      // Crear un carrito para el usuario
+      const userCart = await cartService.create();
+      
+      // Crear un objeto de usuario usando el DTO
+      const userDto = new UsersDto({
+          first_name,
+          last_name,
+          email,
+          age,
+          password: createHash(password),
+          role,
+          cart: userCart._id // Asignar el ID del carrito al usuario
+      });
 
-
-  const { first_name, last_name, email, age, password, role } = req.body;
-  console.log("Registrando usuario:");
-  console.log(req.body);
-
-  const exists = await userService.getByUserName(email);
-  if (exists) {
-    return res.sendClientError({ message: ` Usuario ${email} ya existe.` });
+      // Crear el usuario utilizando el servicio de usuarios
+      const result = await userService.create(userDto);
+      console.log("usuario creado::::::"+result)
+      res.sendSuccess({
+          message: "Usuario creado exitosamente con ID: " + result.id,
+      });
+  } catch (error) {
+      console.error(error);
+      res.sendInternalServerError({ error: "Error interno del servidor" });
   }
-
-  let userCart = await cartService.create()
-  // console.log("USER CART:::::::" + userCart.id)
-  const user = {
-    first_name,
-    last_name,
-    email,
-    age,
-    password: createHash(password),
-    role,
-    cart: userCart
-  };
-  const result = await userService.create(user);
-  console.log("usuario creado::::::"+result.email)
-  console.log("USER ID CART:::::::::" + userCart.id)
-  // console.log("TIPO DE DATO:::::::::" + typeof(userCart))
-
-  res.sendSuccess({
-    message: "Usuario creado con extito con ID: " + result.id,
-  });
 };
-
 
 
 
@@ -73,6 +75,10 @@ export const userLogin = async (req, res) => {
         error: "User not authenticated or missing token.",
       });
     }
+
+    console.log(user, " ++++++++++++++++++++")
+
+
     const tokenUser = {
       name: `${user.first_name} ${user.last_name}`,
       email: user.email,
@@ -145,4 +151,27 @@ export const getAllUsers = async (req, res) => {
 };
 
 
+
+
+
+/*=============================================
+ =                    LOGOUT                  =
+=============================================*/
+
+
+// export const userLogout = async (req, res) => {
+
+
+//   try {
+//     // Eliminar la cookie del token JWT
+//    res.clearCookie('jwtCookieToken');
+  
+
+//     // Enviar respuesta de éxito
+//     res.status(200).json({ message: `¡Sesión cerrada correctamente!` });
+//   } catch (error) {
+//     console.error(error);
+//     return res.status(500).json({ error: "Error interno del servidor al cerrar sesión." });
+//   }
+// };
 

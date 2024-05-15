@@ -5,10 +5,10 @@ function addToCart(pid) {
     })
     .then(response => {
         if (response.ok) {
-            // Producto agregado correctamente, redirige al carrito o muestra una confirmación
-            window.location.href = '/carts/:cid'; // Redirige al carrito del usuario
+            // Producto agregado correctamente, redirigir al carrito o mostrar una confirmación
+            window.location.href = '/carts/:cid'; 
         } else {
-            // Manejar errores de respuesta
+        
             console.error('Error al agregar el producto al carrito');
         }
     })

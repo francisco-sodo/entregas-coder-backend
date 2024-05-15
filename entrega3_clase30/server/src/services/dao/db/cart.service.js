@@ -1,4 +1,6 @@
 import { cartsModel } from './models/carts.model.js';
+import { productService } from '../../service.js';
+
 
 
 
@@ -24,7 +26,8 @@ export default class CartsServiceMongo {
     //get by id A2
     getById = async (cid) => {
         try {
-            let cartById = await cartsModel.findOne({_id:cid});
+            // let cartById = await cartsModel.findOne({_id:cid});
+            let cartById = await cartsModel.findById(cid);
             return cartById
             
         } catch (error) {
@@ -36,6 +39,7 @@ export default class CartsServiceMongo {
 
     //post A3
     create = async (cart) => {
+        
         try {
             let newCart = await cartsModel.create(cart);
             return newCart
@@ -47,6 +51,7 @@ export default class CartsServiceMongo {
     }
 
     //put prod in cart A4
+    //? AGREGAR PRODUCTO AL CARRITO
     update = async (cid, pid) => {
         try {
             let cart = await cartsModel.findById(cid);
@@ -124,42 +129,15 @@ export default class CartsServiceMongo {
 
 
 
-    //todo FINALIZAR COMPRA PRODUCTO. 
-    // A8
-    purchase = async (cid,pid,quantity) => {
-        try {
-            
-            
-        } catch (error) {
-            console.error('Error al querer finalizar la compra:', error);
-            throw error;
-        }
-       
-    }
-
-
-
-
-    //!
-    //? AGREGAR PRODUCTO AL CARRITO DEL USUARIO
-    //A9
-    addToCart = async (uid, pid) => {
-        try {
-          // Obtener el carrito del usuario
-          let cart = await cartsModel.findOne({ user: uid });
     
-          // Si el usuario no tiene un carrito, crear uno nuevo
-          if (!cart) {
-            cart = await cartsModel.create({ user: uid, products: [pid] });
-          } else {
-            // Agregar el producto al carrito existente del usuario
-            cart.products.push(pid);
-            await cart.save();
-          }
-        } catch (error) {
-          throw new Error("Error al agregar producto al carrito");
-        }
-      };
+    
+    
+
+
+
+
+
+
 
 
 
