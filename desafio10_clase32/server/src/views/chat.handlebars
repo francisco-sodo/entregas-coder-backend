@@ -1,0 +1,47 @@
+<main class="main_chatroom">
+
+    <div class="main_chatroom-container">
+
+        <div class="title-container">
+            <div>
+                 <h1 class="white">Estas en el Socket Chat: <span id="myName"></span></h1>
+            </div>
+           
+           <div>
+                <button id="closeChatBox">Close Chat</button>
+           </div>
+           
+        </div>
+            
+        
+        {{!-- Renderizado del mensaje --}}
+        <section class="mensajes" id="mensajes">
+            <div class="mensajes-container">
+                <p class="logs" id="messageLogs"></p> 
+            </div>
+        </section>
+
+
+
+        {{!-- Input del mensaje --}}
+        <section class="actions">
+            <div>
+                    <input id="chatBox" type="text" placeholder="Escribe un mensaje y presiona Enter para enviar"></p>
+            </div>
+            
+        </section>
+
+
+
+
+
+
+
+    </div>
+</main>
+
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+<script src="/socket.io/socket.io.js"></script>
+<script src="/js/chat.js"></script>
