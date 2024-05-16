@@ -159,19 +159,19 @@ export const getAllUsers = async (req, res) => {
 =============================================*/
 
 
-// export const userLogout = async (req, res) => {
+export const userLogout = async (req, res) => {
 
 
-//   try {
-//     // Eliminar la cookie del token JWT
-//    res.clearCookie('jwtCookieToken');
+  try {
+    // Eliminar la cookie del token JWT
+   res.clearCookie('jwtCookieToken');
   
 
-//     // Enviar respuesta de éxito
-//     res.status(200).json({ message: `¡Sesión cerrada correctamente!` });
-//   } catch (error) {
-//     console.error(error);
-//     return res.status(500).json({ error: "Error interno del servidor al cerrar sesión." });
-//   }
-// };
+    // Enviar respuesta de éxito
+    res.status(200).json({ message: `¡Sesión cerrada correctamente!` });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: "Error interno del servidor al cerrar sesión." });
+  }
+};
 

@@ -10,6 +10,8 @@ import { cartService, productService, ticketService } from '../services/service.
 
 
 
+
+
 //get A1
 //? MOSTRAR TODOS LOS CARRITOS
 export const getAllCarts = async (req, res) => {
@@ -150,10 +152,10 @@ export const clearCart = async (req, res) => {
 
 export const purchaseProduct = async (req, res) => {
     let { cid } = req.params
-    let user = req.user
+    let userId = req.user._id
    
 
-    //console.log("USERID::::::::::::::::::",userId) //!undefined
+   
    
    
     try {
@@ -216,8 +218,10 @@ export const purchaseProduct = async (req, res) => {
         //Generar ticket con los detalles de la compra
         const ticketDetails = {
             amount: await calculateTotalAmount(cart),
-            purchaser: user.id,
+            purchaser: userId,
         };
+         //console.log("USER::::::::::::::::::",userId) //!undefined
+
         const generatedTicket = await ticketService.generateTicket(ticketDetails);
 
         // Actualizar el carrito para contener solo los productos que no se pudieron comprar
