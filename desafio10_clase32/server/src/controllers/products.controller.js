@@ -6,7 +6,15 @@
 //import { productService } from '../services/factory.js'
 
 //repository
-import { cartService, productService } from '../services/service.js';
+import { productService } from '../services/service.js';
+
+
+// errors handler
+import CustomError from '../services/errors/CustomError.js';
+import EErrors from "../services/errors/errors-enum.js";
+import { generateProductErrorInfoESP , generateProductErrorInfoENG} from "../services/errors/messages/product-creation-error-messages.js";
+
+
 
 
 
@@ -42,6 +50,11 @@ export const getAllProducts = async (req, res) => {
       console.log(error)
   }
 };
+
+
+
+
+
 
 export const getProductById = async (req, res) => {
   let { pid } = req.params;
@@ -115,25 +128,29 @@ export const getProductByCategory = async (req, res) => {
 
 
 export const createProduct = async (req, res) => {
-  let newProduct = req.body;
+  let newProduct = req.body
+  let productTitle = req.body.title;
+  let productPrice = req.body.price;
   try {
-    let newPost = await productService.create(newProduct);
-    newPost
-      ? res.json(newPost)
-      : res
-          .status(404)
-          .send({
-            error: `El Producto con el ID ${pid} no pudo agregarse correctamente`,
-          });
-  } catch (error) {
-    res
-      .status(500)
-      .send({
-        status: 500,
-        error: `El codigo del producto ingresado ya existe.`,
-        msg: " Error al querer agregar un producto",
-      });
+   
+     //? error handler
+     if(!productTitle || !productPrice){
+     
+      CustomError.createError({
+          name:"Product creation Error",
+          cause:generateProductErrorInfoESP({productTitle,productPrice}),
+          message:"Error tratando de crear un producto.",
+          code: EErrors.INVALID_TYPES_ERROR
+      })
   }
+  let newPost = await productService.create(newProduct);
+  res.json(newPost)
+
+        } catch (error) {
+          console.error(error.cause);
+          res.status(500).send({ error: error.code, message: error.message });
+        }
+
 };
 
 
@@ -177,6 +194,11 @@ export const deleteProduct = async (req, res) => {
       .send({ status: 500, error: " Error al eliminar un producto" });
   }
 };
+
+
+
+
+
 
 
 

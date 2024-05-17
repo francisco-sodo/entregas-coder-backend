@@ -6,6 +6,12 @@ import { cartService } from "../services/service.js";
 import UsersDto from "../services/dto/user.dto.js";
 
 
+// errors handler
+import CustomError from '../services/errors/CustomError.js';
+import EErrors from "../services/errors/errors-enum.js";
+import { generateUserErrorInfoESP , generateUserErrorInfoENG} from "../services/errors/messages/user-creation-error-messages.js";
+
+
 
 
 
@@ -17,7 +23,20 @@ import UsersDto from "../services/dto/user.dto.js";
 export const userRegister = async (req, res) => {
   try {
       const { first_name, last_name, email, age, password, role } = req.body;
-      
+
+
+      //? error handler
+     if(!first_name || !email || !password){
+     
+      CustomError.createError({
+          name:"User creation Error",
+          cause:generateUserErrorInfoESP({first_name, email, password}),
+          message:"Error tratando de crear un usuario.",
+          code: EErrors.INVALID_TYPES_ERROR
+      })
+  }
+
+
       // Verificar si el usuario ya existe
       const exists = await userService.getByUserName(email);
       if (exists) {
@@ -159,19 +178,19 @@ export const getAllUsers = async (req, res) => {
 =============================================*/
 
 
-// export const userLogout = async (req, res) => {
+export const userLogout = async (req, res) => {
 
 
-//   try {
-//     // Eliminar la cookie del token JWT
-//    res.clearCookie('jwtCookieToken');
+  try {
+    // Eliminar la cookie del token JWT
+   res.clearCookie('jwtCookieToken');
   
 
-//     // Enviar respuesta de éxito
-//     res.status(200).json({ message: `¡Sesión cerrada correctamente!` });
-//   } catch (error) {
-//     console.error(error);
-//     return res.status(500).json({ error: "Error interno del servidor al cerrar sesión." });
-//   }
-// };
+    // Enviar respuesta de éxito
+    res.status(200).json({ message: `¡Sesión cerrada correctamente!` });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: "Error interno del servidor al cerrar sesión." });
+  }
+};
 

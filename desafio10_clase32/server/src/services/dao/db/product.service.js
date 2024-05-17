@@ -1,6 +1,7 @@
 import { productsModel } from './models/products.model.js';
 
 
+
 export default class ProductServiceMongo {
     constructor() {
         //console.log("Working products with Database persistence in mongodb");
@@ -27,6 +28,8 @@ export default class ProductServiceMongo {
         console.log(result)
         return result;
     };
+
+ 
 
       //get find by name
       getByCategory = async (category) => {
@@ -58,9 +61,11 @@ export default class ProductServiceMongo {
     create = async (product) => {
         try {
             let newProduct = await productsModel.create(product);
+            // si todo esta ok...
             return newProduct
-
-        } catch (error) {
+        } 
+        
+        catch (error) {
             console.error('Error al crear un producto', error);
             throw error; 
         }

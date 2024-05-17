@@ -40,23 +40,23 @@ const mailOptions = {
 }
 
 // configuracion para enviar un adjunto, con opcion par adjuntar imagen en cuerpo
-const mailOptionsWithAttachments = {
-    from: "Coder Test - " + config.gmailAccount,
-    to: config.gmailAccount,
-    subject: 'Correo de prueba CoderHouse 60220',
-    html: ` <div>
-                <h1>Test de envio de correos con Nodemailer!</h1>
-                <p>Ahora usando imagenes: </p>
-                <img src="cid:gatito-random"/> 
-            </div>`,
-    attachments: [
-        {
-            filename: "gatito",
-            path: __dirname + '/public/images/gatito.png',
-            cid: 'gatito-random' // por medio de este id puedo pasar la imagen al cuerpo del html
-        }
-    ]
-}
+// const mailOptionsWithAttachments = {
+//     from: "Coder Test - " + config.gmailAccount,
+//     to: config.gmailAccount,
+//     subject: 'Correo de prueba CoderHouse 60220',
+//     html: ` <div>
+//                 <h1>Test de envio de correos con Nodemailer!</h1>
+//                 <p>Ahora usando imagenes: </p>
+//                 <img src="cid:gatito-random"/> 
+//             </div>`,
+//     attachments: [
+//         {
+//             filename: "gatito",
+//             path: __dirname + '/public/images/gatito.png',
+//             cid: 'gatito-random' // por medio de este id puedo pasar la imagen al cuerpo del html
+//         }
+//     ]
+// }
 
 
 
@@ -82,21 +82,21 @@ export const sendEmail = (req, res) => {
 }
 
 // enviar mail con opcion par adjuntar imagen en cuerpo
-export const sendEmailWithAttachments = (req, res) => {
-    try {
-        transporter.sendMail(mailOptionsWithAttachments, (error, info) => {
-            if (error) {
-                console.log(error);
-                res.status(400).send({ message: "Error", payload: error });
-            }
-            console.log('Message send: %s', info.messageId);
-            res.send({ message: "Success", payload: info });
-        })
-    } catch (error) {
-        console.error(error);
-        res.status(500).send({ error: error, message: "No se pudo enviar el email desde:" + config.gmailAccount });
-    }
-}
+// export const sendEmailWithAttachments = (req, res) => {
+//     try {
+//         transporter.sendMail(mailOptionsWithAttachments, (error, info) => {
+//             if (error) {
+//                 console.log(error);
+//                 res.status(400).send({ message: "Error", payload: error });
+//             }
+//             console.log('Message send: %s', info.messageId);
+//             res.send({ message: "Success", payload: info });
+//         })
+//     } catch (error) {
+//         console.error(error);
+//         res.status(500).send({ error: error, message: "No se pudo enviar el email desde:" + config.gmailAccount });
+//     }
+// }
 
 
 

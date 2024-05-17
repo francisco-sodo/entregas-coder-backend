@@ -3,12 +3,14 @@
 import { Router } from 'express';
 
 // importamos todos los metodos de products controller
-import * as ProductController from '../controllers/products.controller.js'
+import * as ProductController from '../controllers/products.controller.js';
 
 import { passportCall,authorization} from "../utils.js";
 
 
 const router = Router()
+
+
 
 // GET
 router.get('/', ProductController.getAllProducts)
@@ -34,6 +36,13 @@ router.put('/:pid',passportCall('jwt'),authorization('admin'), ProductController
 
 // DELETE
 router.delete('/:pid', passportCall('jwt'),authorization('admin'), ProductController.deleteProduct)
+
+
+
+
+
+
+
 
 
 

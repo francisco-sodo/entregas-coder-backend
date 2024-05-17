@@ -56,6 +56,10 @@ import emailRoutes from './routes/email.routes.js'
 //* /chat/ -> DB HB WS
 import chatRoutes from './routes/chat.routes.js';
 
+//* /faker/
+import fakeProductsRoutes from './routes/fakeProducts.routes.js'
+
+
 
 
 
@@ -140,7 +144,8 @@ app.use("/api/email", emailRoutes)
 //* endpoint ruta chats WEBSOCKET
 app.use('/chat/', chatRoutes)
 
-
+//* endpoint api fake products
+app.use('/mockingproducts', fakeProductsRoutes)
 
 
 

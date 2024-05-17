@@ -1,11 +1,20 @@
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
+
+import {faker} from '@faker-js/faker'
+
+
+
 import multer from 'multer';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import passport from 'passport';
 
 import config from './config/config.js'
+
+
+
+
 
 
 // config ruta absoluta
@@ -106,6 +115,36 @@ export const authorization = (role) => {
         next();
     }
 };
+
+
+
+
+
+
+/*=============================================
+=                    FAKER                    =
+=============================================*/
+
+
+faker.locale = 'es'; //Idioma de los datos
+export const generateProduct = () => {
+    return {
+        title: faker.commerce.productName(),
+        description: faker.commerce.productDescription(),
+        code: faker.datatype.number({ min: 10000, max: 99999 }),
+        price: faker.commerce.price(),
+        status: faker.datatype.boolean(),
+        stock: faker.datatype.number(100),
+        category: faker.commerce.productMaterial(),
+        id: faker.database.mongodbObjectId().toString(),
+        thumbnails: faker.image.imageUrl()
+    }
+};
+
+
+
+
+
 
 
 export default __dirname;

@@ -16,24 +16,21 @@ const stringTypeSchemaUniqueRequired = {
     required: true
 };
 
-const stringTypeSchemaNonUniqueRequiredIndex = {
-    type: String,
-    unique: false,
-    required: true,
-    index:true
-};
+
 
 
 const productSchema = new mongoose.Schema({
 
-    title: stringTypeSchemaNonUniqueRequiredIndex,
+    title: {type: String, unique:false, required:true},
+    //title: {type: String, unique:false},
     description: stringTypeSchemaNonUniqueRequired,
     code: stringTypeSchemaUniqueRequired,
-    price: {type: Number, required: true},
-    status: {type: Boolean, required: true},
-    stock: {type: Number, required: true},
-    category: stringTypeSchemaNonUniqueRequiredIndex,
-    thumbnails: {type: Array, required: false}
+    price: {type: Number, required:true},
+    // price: Number,
+    status: {type: Boolean, required:true},
+    stock: {type: Number, required:true},
+    category: {type: String, unique:false,required:true},
+    thumbnails: {type: Array, required:false}
     
 
 })
