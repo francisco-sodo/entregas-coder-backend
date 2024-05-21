@@ -150,11 +150,7 @@ export const clearCart = async (req, res) => {
 
 export const purchaseProduct = async (req, res) => {
     let { cid } = req.params
-    let userId = req.user._id
-   
-
-    console.log("USERID::::::::::::::::::",userId) //!undefined
-   
+    
    
     try {
         // Obtener el carrito por su ID
@@ -215,11 +211,13 @@ export const purchaseProduct = async (req, res) => {
 
 
         //Generar ticket con los detalles de la compra
+        let user = req.user.email
         const ticketDetails = {
             amount: await calculateTotalAmount(cart),
-            purchaser: userId,
+            purchaser: user,
         };
         const generatedTicket = await ticketService.generateTicket(ticketDetails);
+        console.log("Ticket de Compra generado:\n", generatedTicket)
 
         // Actualizar el carrito para contener solo los productos que no se pudieron comprar
         cart.products = cart.products.filter(product => !productsPurchased.includes(product.product));
@@ -231,9 +229,6 @@ export const purchaseProduct = async (req, res) => {
             notPurchased: productsNotPurchased,
             ticket: generatedTicket,
         });
-        
-      
-        
         
 
     } catch (error) {
