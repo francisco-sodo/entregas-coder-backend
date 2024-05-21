@@ -7,7 +7,6 @@ export default class TicketService {
 
     }
 
-//*
     generateTicket = async (purchaseDetails) => {
 
         try {
@@ -33,8 +32,6 @@ export default class TicketService {
 
     }
 }
-//*
-
 
 // código único para el ticket
 const generateUniqueCode = () => {

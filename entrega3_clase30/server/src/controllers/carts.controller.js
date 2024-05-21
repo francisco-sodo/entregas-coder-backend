@@ -152,12 +152,10 @@ export const clearCart = async (req, res) => {
 
 export const purchaseProduct = async (req, res) => {
     let { cid } = req.params
-    let userId = req.user._id
+    
    
 
-   
-   
-   
+
     try {
         // Obtener el carrito por su ID
         const cart = await cartService.getById(cid);
@@ -214,13 +212,13 @@ export const purchaseProduct = async (req, res) => {
         };
 
 
-
+        let user = req.user.email
         //Generar ticket con los detalles de la compra
         const ticketDetails = {
             amount: await calculateTotalAmount(cart),
-            purchaser: userId,
+            purchaser: user,
         };
-         //console.log("USER::::::::::::::::::",userId) //!undefined
+         //console.log("TICKET DETAILS:::::++++++++++++:::::::::::::",ticketDetails)
 
         const generatedTicket = await ticketService.generateTicket(ticketDetails);
 
