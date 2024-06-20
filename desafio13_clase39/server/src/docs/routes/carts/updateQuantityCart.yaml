@@ -1,0 +1,42 @@
+paths:
+  /api/carts/{cid}/product/{pid}:
+    patch:
+      summary: Modifica solo la cantidad de un producto en un carrito.
+      tags:
+        - Carts
+      parameters:
+        - name: cid
+          in: path
+          description: Id del carrito a modificar.
+          required: true
+          schema:
+            type: string
+        - name: pid
+          in: path
+          description: Id del producto cuya cantidad se desea modificar.
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                quantity:
+                  type: integer
+                  description: Nueva cantidad del producto.
+              example:
+                quantity: 20
+      responses:
+        "200":
+          description: Cantidad del producto modificada exitosamente.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Cart'
+        "401":
+            description: No tiene autorización modificar este carrito.
+        "500":
+          description: Error inesperado en el servidor. No se puede manejar el proceso.

@@ -1,0 +1,25 @@
+/api/carts/{cid}:
+      delete:
+        summary: Se vacía el carrito.
+        tags:
+          - Carts
+        parameters:
+          - name: cid
+            in: path
+            required: true
+            description: Id del carrito que se ha solicitado.
+            schema:
+              $type: String
+        responses:
+          "200":
+            description: Operación exitosa. El carrito se ha vaciado.
+          "401":
+            description: No tiene autorización para vaciar un carrito.
+          "404":
+            description: Carrito no encontrado.
+          "500":
+            description: Error inesperado en el servidor. No se puede manejar el proceso.
+
+
+
+        

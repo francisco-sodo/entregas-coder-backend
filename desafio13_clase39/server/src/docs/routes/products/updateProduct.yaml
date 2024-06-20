@@ -1,0 +1,30 @@
+paths:
+  /api/products/{pid}:
+    put:
+      summary: Actualiza un producto mediante su id.
+      tags:
+        - Products
+      parameters:
+      - name: pid
+        in: path
+        description: Id del producto a modificar que se ha solicitado.
+        required: true
+        type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Product'
+      responses:
+        "200":
+          description: Producto actualizado exitosamente.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+        "404":
+          description: Producto no encontrado
+        "500":
+            description: Error inesperado en el servidor. No se puede manejar el proceso.
+

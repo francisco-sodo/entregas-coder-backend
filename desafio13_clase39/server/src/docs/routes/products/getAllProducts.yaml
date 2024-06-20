@@ -1,0 +1,19 @@
+paths:
+  /api/products/:
+    get:
+      summary: Obtiene todos los productos.
+      tags:
+        - Products
+      responses:
+        "200":
+          description: Operación exitosa. Se retorna un array con todos los productos.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#components/schemas/Product'
+        "400":
+          description: Se envió un dato no esperado.
+        "500":
+          description: Error inesperado en el servidor. No se puede manejar el proceso.

@@ -1,0 +1,23 @@
+paths:
+  /api/carts:
+    post:
+      summary: Crear un nuevo Carrito.
+      tags:
+        - Carts
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/requestBodies/NewCart'
+      responses:
+        "200":
+          description: Carrito creado exitosamente.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Cart'
+        "401":
+          description: No tiene autorización para crear un Carrito.
+        "500":
+            description: Error inesperado en el servidor. No se puede manejar el proceso.

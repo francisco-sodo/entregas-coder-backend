@@ -1,0 +1,21 @@
+paths:
+  /api/products/{pid}:
+    delete:
+      summary: Elimina un producto mediante su id.
+      tags:
+        - Products
+      parameters:
+      - name: pid
+        in: path
+        description: Id del producto a eliminar que se ha solicitado.
+        required: true
+        type: string
+      responses:
+        "200":
+          description: Operación exitosa. Producto eliminado.
+        "401":
+          description: No tiene autorización para eliminar Productos.
+        "404":
+          description: Producto No encontrado.
+        "500":
+            description: Error inesperado en el servidor. No se puede manejar el proceso.

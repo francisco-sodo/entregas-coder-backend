@@ -1,0 +1,45 @@
+components:
+  requestBodies:
+    NewProduct:
+      type: object
+      required:
+        - title
+        - code
+        - price
+        - status
+        - stock
+        - category
+      properties:
+        title:
+          type: String
+          description: Nombre ó título del producto.
+        description:
+          type: String
+          description: Descripción del producto.
+        code:
+          type: String
+          description: Código del producto.
+        price:
+          type: Number
+          description: Precio del producto.
+        status:
+          type: Boolean
+          description: Status del producto.
+        stock:
+          type: Number
+          description: Stock del producto.
+        category:
+          type: String
+          description: Categoria del producto.
+        thumbnails:
+          type: Array
+          description: Imagenes del producto.
+      example:
+        title: Sabroso Metal Zapatos
+        description: Refinado
+        code: '52731'
+        price: 45
+        status: true
+        stock: 43
+        category: Metal
+        thumbnails: [https://loremflickr.com/640/480]
