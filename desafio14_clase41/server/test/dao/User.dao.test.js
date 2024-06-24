@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import config from '../../src/config/config.js';
 //import del UserService (UserDao)
 import UsersDao from '../../src/services/dao/db/user.service.js';
 import { expect } from "chai";
@@ -6,7 +7,7 @@ import { expect } from "chai";
 
 
 
-mongoose.connect('mongodb+srv://fanky1986:LOmyNfS0kmmTHZZ4@cluster0.ptjuvdn.mongodb.net/ecommerce-test?retryWrites=true&w=majority&appName=Cluster0')
+mongoose.connect(config.mongoUrlTest)
 
 
 
