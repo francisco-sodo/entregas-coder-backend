@@ -1,0 +1,25 @@
+/api/products/search_category/{category}:
+      get:
+        summary: Filtra productos por su categoría.
+        tags:
+          - Products
+        parameters:
+          - name: category
+            in: path
+            required: true
+            description: Categoría del producto que se ha solicitado.
+            schema:
+              $type: String
+        responses:
+          "200":
+            description: Operación exitosa. Se retorna un array con todos los productos filtrados por categoría.
+            content:
+              application/json:
+                schema:
+                  type: array
+                  items:
+                    $ref: '#components/schemas/Product'
+          "404":
+            description: No existen productos con esta categoría.
+          "500":
+            description: Error inesperado en el servidor. No se puede manejar el proceso.

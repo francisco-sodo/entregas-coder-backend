@@ -1,0 +1,17 @@
+paths:
+  /api/carts/:
+    get:
+      summary: Obtiene todos los carritos.
+      tags:
+        - Carts
+      responses:
+        "200":
+          description: Operación exitosa. Se retorna un array con todos los carritos.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#components/schemas/Cart'
+        "500":
+          description: Error inesperado en el servidor. No se puede manejar el proceso.

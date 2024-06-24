@@ -1,0 +1,23 @@
+paths:
+  /api/products:
+    post:
+      summary: Crear un nuevo Producto.
+      tags:
+        - Products
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/requestBodies/NewProduct'
+      responses:
+        "201":
+          description: Producto creado exitosamente.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+        "401":
+          description: No tiene autorización para crear Productos.
+        "500":
+            description: Error inesperado en el servidor. No se puede manejar el proceso.

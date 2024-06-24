@@ -1,0 +1,25 @@
+/api/products/search_title/{title}:
+      get:
+        summary: Busca productos por Título/Nombre.
+        tags:
+          - Products
+        parameters:
+          - name: title
+            in: path
+            required: true
+            description: Título/Nombre del producto que se ha solicitado.
+            schema:
+              $type: String
+        responses:
+          "200":
+            description: Operación exitosa. Se retorna un array con todos los productos filtrados por Título/Nombre.
+            content:
+              application/json:
+                schema:
+                  type: array
+                  items:
+                    $ref: '#components/schemas/Product'
+          "404":
+            description: No existen productos con este Título/Nombre.
+          "500":
+            description: Error inesperado en el servidor. No se puede manejar el proceso.

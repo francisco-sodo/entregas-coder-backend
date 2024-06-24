@@ -1,0 +1,42 @@
+components:
+  schemas:
+    Product:
+      type: object
+      properties:
+        _id:
+          type: ObjectId
+          description: Id autogenerado por MongoDB.
+        title:
+          type: String
+          description: Nombre ó título del producto. Requerido.
+        description:
+          type: String
+          description: Descripción del producto.
+        code:
+          type: String
+          description: Código del producto. Único y Requerido.
+        price:
+          type: Number
+          description: Precio del producto. Requerido.
+        status:
+          type: Boolean
+          description: Status del producto. Requerido.
+        stock:
+          type: Number
+          description: Stock del producto. Requerido.
+        category:
+          type: String
+          description: Categoria del producto. Requerido.
+        thumbnails:
+          type: Array
+          description: Imagenes del producto.
+      example:
+        _id: ObjectId(66469f1301ae58a097194094)
+        title: Sabroso Metal Zapatos
+        description: Refinado
+        code: '52731'
+        price: 45
+        status: true
+        stock: 43
+        category: Metal
+        thumbnails: [https://loremflickr.com/640/480]

@@ -1,0 +1,23 @@
+components:
+  requestBodies:
+    NewCart:
+      type: object
+      properties:
+        products:
+          type: array
+          description: Array contenedor de Productos.
+          items:
+            type: object
+            properties:
+              product:
+                type: object
+                description: Producto.
+              quantity:
+                type: integer
+                description: Cantidad del mismo Producto en el carrito.
+      example:
+        _id: 66743ab9dc01f614f80712c7
+        products:
+          - product: {}
+            quantity: 0
+

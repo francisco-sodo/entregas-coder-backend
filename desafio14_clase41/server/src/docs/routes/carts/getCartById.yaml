@@ -1,0 +1,31 @@
+/api/carts/{cid}:
+      get:
+        summary: Obtiene un único carrito mediante su id.
+        tags:
+          - Carts
+        parameters:
+          - name: cid
+            in: path
+            required: true
+            description: Id del carrito que se ha solicitado.
+            schema:
+              $type: String
+        responses:
+          "200":
+            description: Operación exitosa. Se retorna el carrito solicitado.
+            content:
+              application/json:
+                schema:
+                  type: array
+                  items:
+                    $ref: '#components/schemas/Cart'
+          "401":
+            description: No tiene autorización para buscar un carrito por su id.
+          "404":
+            description: Carrito no encontrado.
+          "500":
+            description: Error inesperado en el servidor. No se puede manejar el proceso.
+
+
+
+        
