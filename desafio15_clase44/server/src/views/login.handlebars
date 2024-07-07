@@ -1,0 +1,31 @@
+<main class="userSession-main">
+    <div class="userSessionForm-container">
+        <h1>Login</h1>
+        <form class="userSessionForm" id="loginForm">
+            <div>
+                <label>Email</label>
+                <input class="formField" name="email">
+            </div>
+            <div>
+                <label>Contraseña</label>
+                <input class="formField" type="password" name="password">
+            </div>
+
+            <br>
+            <div>
+                <input class="btn-normal" type="submit">
+            </div>
+        </form>
+    </div>
+        <div>
+            <p>¿No estás registrado? <a href="/user/register">Regístrate aquí</a></p>
+             <p>¿Tienes una cuenta de GitHub? <a href="/github/login">Regístrate aquí</a></p>
+        </div>
+
+        <div>
+            <p>¿Olvidaste tu contraseña? <a href="#" id="resetPasswordLink">Haz click aquí para establecer una nueva</a></p>
+        </div>
+
+</main>
+
+<script src="/js/login.js"></script>
