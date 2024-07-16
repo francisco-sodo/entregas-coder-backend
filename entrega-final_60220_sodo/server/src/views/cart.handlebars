@@ -1,0 +1,39 @@
+<main>
+    <div class="cart-header">
+        <h1>Tu Carrito {{_id}}</h1>
+        
+         <button>Vaciar Carrito</button>
+    </div>
+
+    {{#each products}}
+    <div class="product-container">
+
+        
+        <section class="product">
+
+            <div class="img-container">
+                <img src="{{this.thumbnails}}" alt="{{this.title}}">
+            </div>
+
+            <div class="info-container">
+                <h3>{{this.title}}</h3>
+                <p><b>Precio:</b> ${{this.price}}</p>
+                <p><b>Cantidad:</b> {{this.quantity}}</p>
+            </div>
+
+        </section>
+
+        <section class="btn-container">
+            <button>Comprar</button>
+            <button>Eliminar del carrito</button>      
+        </section> 
+
+    </div>
+        <hr> 
+    {{/each}}
+
+</main>
+
+
+{{!-- TODO logica en public --}}
+{{!-- <script src="/js/cart.js"></script> --}}
