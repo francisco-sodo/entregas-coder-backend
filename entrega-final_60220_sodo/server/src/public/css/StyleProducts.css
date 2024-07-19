@@ -124,3 +124,18 @@ li{
     object-fit:cover;
     border-radius: 5px;
 }
+
+.btn-normal{
+    height: 30px;
+    border: none;
+    border-radius: 5px;
+    background-color: #0a7663;
+    cursor: pointer;
+}
+.btn-normal:hover{
+    background-color: #065748;
+}
+.btn-normal a{
+    color: #fff;
+    text-decoration-line: none;
+}

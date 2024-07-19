@@ -112,7 +112,7 @@ export const deleteProductInCart = async (req, res) => {
     let { cid, pid } = req.params
     try {
         let deletedProduct = await cartService.delete(cid,pid)
-        console.log("ACKNOWLEDGED", deletedProduct)
+        console.log("Producto eliminado ", deletedProduct)
 
         deletedProduct
         ? res.send({ msg: `Producto con el ID ${pid} eliminado del carrito`})
@@ -143,115 +143,150 @@ export const clearCart = async (req, res) => {
 
 
 
-
-
-
-
-
 // A8
 //? FINALIZAR COMPRA.
 
 
-export const purchaseProduct = async (req, res) => {
-    let { cid } = req.params
+// export const purchaseProduct = async (req, res) => {
+//     let { cid } = req.params
+   
     
    
-    try {
-        // Obtener el carrito por su ID
-        const cart = await cartService.getById(cid);
+//     try {
+//         // Obtener el carrito por su ID
+//         const cart = await cartService.getById(cid);
       
-        if (!cart) {
-            return res.status(404).send({ error: `El carrito con el ID ${cid} no fue encontrado` });
-        }
+//         if (!cart) {
+//             console.error(`El carrito con ID ${cid} no fue encontrado`);
+//             return res.status(404).send({ error: `El carrito con el ID ${cid} no fue encontrado` });
+//         }
 
 
-        // Iterar sobre los productos del carrito para finalizar la compra
-        const productsPurchased = [];
-        const productsNotPurchased = [];
-        const productDetailsForTicket = [];
+//         // Iterar sobre los productos del carrito para finalizar la compra
+//         const productsPurchased = [];
+//         const productsNotPurchased = [];
+//         const productDetailsForTicket = [];
 
 
-        for (const product of cart.products) {
-            // Obtener el producto de la base de datos por su ID
-            const productDetails = await productService.getById(product.product);
-            //console.log('XXXXXDetalles del producto:', productDetails);
-            if (!productDetails) {
-                productsNotPurchased.push(product.product);
-                continue;
-            }
-            // Verificar si hay suficiente stock del producto
-            if (productDetails.stock >= product.quantity) {
-                // Restar la cantidad comprada del stock del producto
-                productDetails.stock -= product.quantity;
-                await productDetails.save();
-                // Agregar el producto a la lista de productos comprados
-                productsPurchased.push(product.product);
-                productDetailsForTicket.push({ title: productDetails.title, quantity: product.quantity });
-                //console.log(`Producto añadido: ${productDetails.title}`);
-            } else {
-                // Agregar el producto a la lista de productos que no pudieron ser comprados
-                productsNotPurchased.push(product.product);
-            }
-        }
+//         for (const product of cart.products) {
+//             // Obtener el producto de la base de datos por su ID
+//             const productDetails = await productService.getById(product.product);
+//             //console.log('XXXXXDetalles del producto:', productDetails);
+//             if (!productDetails) {
+//                 productsNotPurchased.push(product.product);
+//                 continue;
+//             }
+//             // Verificar si hay suficiente stock del producto
+//             if (productDetails.stock >= product.quantity) {
+//                 // Restar la cantidad comprada del stock del producto
+//                 productDetails.stock -= product.quantity;
+//                 await productDetails.save();
+//                 // Agregar el producto a la lista de productos comprados
+//                 productsPurchased.push(product.product);
+//                 productDetailsForTicket.push({ title: productDetails.title, quantity: product.quantity });
+//                 //console.log(`Producto añadido: ${productDetails.title}`);
+//             } else {
+//                 // Agregar el producto a la lista de productos que no pudieron ser comprados
+//                 productsNotPurchased.push(product.product);
+//             }
+//         }
 
 
-        // calcular total de compra
-        const calculateTotalAmount = async (cart) => {
-            let totalAmount = 0;
-            try {
-                for (const product of cart.products) {
-                    // Obtener los detalles del producto de la base de datos por su ID
-                    const productDetails = await productService.getById(product.product);
-                    if (!productDetails) {
-                        // Manejar el caso donde los detalles del producto no se encuentran
-                        continue;
-                    }
-                    // Agregar el precio del producto multiplicado por la cantidad al totalAmount
-                    totalAmount += productDetails.price * product.quantity;
-                }
-            } catch (error) {
-                console.error('Error al calcular el monto total de la compra:', error);
-                // Si hay un error al calcular el monto, puedes retornar 0 o manejarlo de otra forma según tu lógica de negocio
-                return 0;
-            }
-            return totalAmount;
-        };
+//         // calcular total de compra
+//         const calculateTotalAmount = async (cart) => {
+//             let totalAmount = 0;
+//             try {
+//                 for (const product of cart.products) {
+//                     // Obtener los detalles del producto de la base de datos por su ID
+//                     const productDetails = await productService.getById(product.product);
+//                     if (!productDetails) {
+//                         // Manejar el caso donde los detalles del producto no se encuentran
+//                         continue;
+//                     }
+//                     // Agregar el precio del producto multiplicado por la cantidad al totalAmount
+//                     totalAmount += productDetails.price * product.quantity;
+//                 }
+//             } catch (error) {
+//                 console.error('Error al calcular el monto total de la compra:', error);
+//                 // Si hay un error al calcular el monto, puedes retornar 0 o manejarlo de otra forma según tu lógica de negocio
+//                 return 0;
+//             }
+//             return totalAmount;
+//         };
 
 
 
-        //Generar ticket con los detalles de la compra
-        let user = req.user.email
+//         //Generar ticket con los detalles de la compra
+//         let user = req.user.email
+//         const ticketDetails = {
+//             amount: await calculateTotalAmount(cart),
+//             purchaser: user,
+//             products: productDetailsForTicket
+//         };
+//         //console.log("XXXXDetalles del ticket antes de generar:", ticketDetails);
+
+
+//         const generatedTicket = await ticketService.generateTicket(ticketDetails);
+//         console.log("Ticket de Compra generado:\n", generatedTicket)
+
+//         // Actualizar el carrito para contener solo los productos que no se pudieron comprar
+//         cart.products = cart.products.filter(product => !productsPurchased.includes(product.product));
+//         await cart.save();
+
+//         // email confirmando compra
+//         await sendPurchaseConfirmationEmail(user, generatedTicket);
+
+
+//           // Enviar respuesta al cliente con los productos comprados, los que no pudieron ser comprados y el ticket generado
+//           res.send({
+//             purchased: productsPurchased,
+//             notPurchased: productsNotPurchased,
+//             ticket: generatedTicket,
+//         });
+
+
+//     } catch (error) {
+//         console.error('Error al querer finalizar la compra del producto:', error);
+//         res.status(500).send({ status: 500, error: 'Error al querer finalizar la compra del producto' });
+//     }
+// }
+
+
+export const purchaseProductInCart = async (req, res) => {
+    let { cid, pid } = req.params;
+    try {
+        const result = await cartService.purchaseProducts(cid, pid);
+
+        // Generar ticket para el producto comprado
+        const user = req.user.email;
         const ticketDetails = {
-            amount: await calculateTotalAmount(cart),
+            amount: result.product.price * result.quantity,
             purchaser: user,
-            products: productDetailsForTicket
+            products: [{ title: result.product.title, quantity: result.quantity }],
         };
-        //console.log("XXXXDetalles del ticket antes de generar:", ticketDetails);
-
 
         const generatedTicket = await ticketService.generateTicket(ticketDetails);
-        console.log("Ticket de Compra generado:\n", generatedTicket)
 
-        // Actualizar el carrito para contener solo los productos que no se pudieron comprar
-        cart.products = cart.products.filter(product => !productsPurchased.includes(product.product));
-        await cart.save();
-
-        // email confirmando compra
+        // Enviar correo de confirmación de compra
         await sendPurchaseConfirmationEmail(user, generatedTicket);
 
-
-          // Enviar respuesta al cliente con los productos comprados, los que no pudieron ser comprados y el ticket generado
-          res.send({
-            purchased: productsPurchased,
-            notPurchased: productsNotPurchased,
+        // res.send({
+        //     msg: `Compra del producto con ID ${pid} realizada con éxito`,
+        //     ticket: generatedTicket,
+        // });
+        res.json({
+            msg: `Compra del producto con ID ${pid} realizada con éxito`,
             ticket: generatedTicket,
         });
-        
-
     } catch (error) {
-        res.status(500).send({ status: 500, error: 'Error al querer finalizar la compra del producto' });
+        console.error('Error al comprar el producto en el carrito:', error);
+        res.status(500).send({ status: 500, error: 'Error al comprar el producto en el carrito' });
     }
-}
+};
+
+
+
+
 
 
 

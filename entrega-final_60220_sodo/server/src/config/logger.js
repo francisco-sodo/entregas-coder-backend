@@ -1,42 +1,7 @@
 import winston, { transports } from 'winston';
 import config from "./config.js"
 
-//configuracion base
-// definimos configuracion del logger
-// const logger = winston.createLogger({
-//     // Declaramos transport
-//     transports: [
-//         // definimos el transport de consola
-//         new winston.transports.Console({ level: "http" }),
-//         new winston.transports.File({ filename: './errors.log', level: "warn" })
-//     ]
-// })
-
-
-// // Declaramos un middleware
-// export const addLogger = (req, res, next) => {
-//     req.logger = logger;
-
-//     //console y File
-//     req.logger.error(`${req.method} en ${req.url} - at ${new Date().toLocaleDateString()} - ${new Date().toLocaleTimeString()}`)
-//     //console y File
-//     req.logger.warn(`${req.method} en ${req.url} - at ${new Date().toLocaleDateString()} - ${new Date().toLocaleTimeString()}`)
-//     //console
-//     req.logger.info(`${req.method} en ${req.url} - at ${new Date().toLocaleDateString()} - ${new Date().toLocaleTimeString()}`)
-//     //console
-//     req.logger.http(`${req.method} en ${req.url} - at ${new Date().toLocaleDateString()} - ${new Date().toLocaleTimeString()}`)
-
-//     req.logger.debug(`${req.method} en ${req.url} - at ${new Date().toLocaleDateString()} - ${new Date().toLocaleTimeString()}`)
-   
-
-    
-
-
-//     next()
-
-// }
-
-// Custom logger Options
+//Custom logger Options
 const customLevelsOptions = {
     levels: {
         fatal: 0,

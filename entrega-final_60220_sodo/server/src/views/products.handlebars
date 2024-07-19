@@ -1,43 +1,81 @@
- {{!-- //! A ESTA PANTALLA SOLO DEBERIA ENTRAR UN USER ROL USER --}}
 
 <main class="main-container">
 
 
+
     <nav class="nav">
-{{#if user}}
+        {{#if user}}
+
+        {{#if isAdmin}}
 
         <div class="user">
             <h2>Bienvenido {{user.name}}!</h2>
         </div>
 
         <div>
-             <a href="/carts/:cid">Mi Carrito</a>
-        </div>
-        <div>
-             <a href="/chat">Ir al Chat</a>
-        </div>
-
-        <div>
-             <a href="/user/current">Mi Perfil</a>
+            <a href="/user/current">Mi Perfil</a>
         </div>
         <div>
             <a href="/user/logout">Logout</a>
         </div>
 
-        
+        {{/if}}
+
+        {{#if isUser}}
+         <div class="user" data-cid="{{cid}}">
+            <h2>Bienvenido {{user.name}}!</h2>
+        </div>
+
+        <div>
+            <a href="/carts/:cid">Mi Carrito</a>
+        </div>
+        <div>
+            <a href="/chat" target="_blank">Ir al Chat</a>
+        </div>
+
+        <div>
+            <a href="/user/current">Mi Perfil</a>
+        </div>
+        <div>
+            <a href="/user/logout">Logout</a>
+        </div>
+
+        {{/if}}
+
+        {{#if isPremium}}
+         <div class="user" data-cid="{{cid}}">
+            <h2>Bienvenido {{user.name}}!</h2>
+        </div>
+
+        <div>
+            <a href="/carts/:cid">Mi Carrito</a>
+        </div>
+        <div>
+            <a href="/chat">Ir al Chat</a>
+        </div>
+
+        <div>
+            <a href="/user/current">Mi Perfil</a>
+        </div>
+        <div>
+            <a href="/user/logout">Logout</a>
+        </div>
+        {{/if}}
 
 
-    {{else}}
+
+
+
+        {{else}}
         <div>
             <a href="/user/login">Login</a>
         </div>
-{{/if}}
+        {{/if}}
     </nav>
-   
-    
 
-     
-    
+
+
+
 
 
 
@@ -56,24 +94,25 @@
 
 
 
-         {{!--* 2 --}}
-    <div class="paginate-controls-container">
-        <div>
-            {{#if prevLink}} {{!-- Si hay pagina previa --}}
-            <a href={{prevLink}}> << Anterior</a>
-            {{/if}}
-            &nbsp;
-            {{currentPage}} /&nbsp;{{totalPages}}
-            &nbsp;
-            {{#if nextLink}}
-            <a href={{nextLink}}> Siguiente >></a>
-            {{/if}}
+        {{!--* 2 --}}
+        <div class="paginate-controls-container">
+            <div>
+                {{#if prevLink}} {{!-- Si hay pagina previa --}}
+                <a href={{prevLink}}>
+                    << Anterior</a>
+                        {{/if}}
+                        &nbsp;
+                        {{currentPage}} /&nbsp;{{totalPages}}
+                        &nbsp;
+                        {{#if nextLink}}
+                        <a href={{nextLink}}> Siguiente >></a>
+                        {{/if}}
+            </div>
+            <div>
+                <b>{{totalDocs}}</b> Productos encontrados
+            </div>
         </div>
-        <div>
-            <b>{{totalDocs}}</b> Productos encontrados
-        </div>
-    </div>
-    {{!--* /2 --}}
+        {{!--* /2 --}}
 
 
 
@@ -86,22 +125,28 @@
                 <img src="{{this.thumbnails}}" alt="{{this.title}}">
             </div>
             <ul>
-                <li><h2>{{this.title}}</h2></li>
-                <li><h4><b>Precio: </b>${{this.price}}</h4></li>
-                <li><b>Descripción:</b> {{this.description}}</li>
-                <li><b>Código:</b> {{this.code}}</li>
-                <li><b>Status:</b> {{this.status}}</li>
+                <li>
+                    <h4>{{this.title}}</h4>
+                </li>
+                <li>
+                    <h4><b>Precio: </b>${{this.price}}</h4>
+                </li>
+                {{!-- <li><b>Descripción:</b> {{this.description}}</li> --}}
+                {{!-- <li><b>Código:</b> {{this.code}}</li> --}}
+                {{!-- <li><b>Status:</b> {{this.status}}</li> --}}
                 <li><b>Stock:</b> {{this.stock}}</li>
-                <li><b>Categoría:</b> {{this.category}}</li>
+                {{!-- <li><b>ID:</b> {{this._id}}</li> --}}
             </ul>
-            <button onclick="addToCart('{{this._id}}')">Agregar al Carrito</button> 
+            <button class="btn-normal"><a href='/products/product/{{this._id}}'>Ver detalles</a></button>
+                {{!-- <button onclick="addToCart('{{this._id}}')">Agregar al Carrito</button> --}}
+               
         </div>
 
         {{/each}}
     </section>
     {{!--* /3 --}}
 
-    
+
 
 
     {{else}}
@@ -116,5 +161,4 @@
 
 </main>
 
-{{!-- TODO logica en public --}}
-<script src="/js/addToCart.js"></script>
+

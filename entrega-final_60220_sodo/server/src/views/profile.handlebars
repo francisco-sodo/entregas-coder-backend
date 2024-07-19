@@ -4,27 +4,36 @@
   <p>{{user.email}}</p>
   <p>{{user.age}}</p>
   <p>{{user.role}}</p>
-  
-  
-
-
 </div>
-
-
-{{!-- DEPENDIENDO DEL ROL, PUEDE VER UNOS U OTROS BOTONES --}}
-
 
 <div>
     <a href="/user/logout">Logout</a>
 </div>
 
+{{!-- DEPENDIENDO DEL ROL, PUEDE VER UNOS U OTROS BOTONES --}}
 
-{{#if user_role}}
+
+
+{{#if isUser}}
 <div>
   <a href="/products">Productos</a>
 </div>
 <div>
-  <a href="/carts/:cid">Ver Mi Carrito</a>
+  {{!-- <a href="/carts/:cid">Ver Mi Carrito</a> --}}
+    <a href="/carts/{{user.cart}}">Ver Mi Carrito</a>
+</div>
+<div>
+  <a href="/chat" target="_blank">Ir al Chat</a>
+</div>
+{{/if}}
+
+{{#if isPremium}}
+<div>
+  <a href="/products">Productos</a>
+</div>
+<div>
+  {{!-- <a href="/carts/:cid">Ver Mi Carrito</a> --}}
+    <a href="/carts/{{user.cart}}">Ver Mi Carrito</a>
 </div>
 <div>
   <a href="/chat">Ir al Chat</a>
@@ -32,8 +41,12 @@
 {{/if}}
 
 
-{{#if admin_role}}
+{{#if isAdmin}}
+<div>
+  <a href="/products">Productos</a>
+</div>
 <div>
   <p>Editar Productos</p>
+  <p>Editar usuarios</p>
 </div>
 {{/if}}

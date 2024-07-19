@@ -1,5 +1,5 @@
 import { cartsModel } from './models/carts.model.js';
-//import { productService } from '../../service.js';
+import { productService } from '../../service.js';
 
 
 
@@ -26,7 +26,7 @@ export default class CartsServiceMongo {
     //get by id A2
     getById = async (cid) => {
         try {
-            // let cartById = await cartsModel.findOne({_id:cid});
+            //let cartById = await cartsModel.findOne({_id:cid});
             let cartById = await cartsModel.findById(cid);
             return cartById
             
@@ -54,7 +54,8 @@ export default class CartsServiceMongo {
     //? AGREGAR PRODUCTO AL CARRITO
     update = async (cid, pid) => {
         try {
-            let cart = await cartsModel.findById(cid);
+            let cart = await cartsModel.findOne({_id:cid});
+            //let cart = await cartsModel.findById(cid);
             if (!cart) {
                 throw new Error(`Carrito con ID ${cid} no encontrado`);
             }
@@ -107,7 +108,7 @@ export default class CartsServiceMongo {
             return deleteProduct
             
         } catch (error) {
-            console.error('Error al vaciar el carrito:', error);
+            console.error('Error al eliminar un producto del carrito:', error);
             throw error;
         }
     }
@@ -129,18 +130,58 @@ export default class CartsServiceMongo {
 
 
 
+
+    //? COMPRAR UN PRODUCTO. 
+    // comprar 1 producto seleccionado dentro del carrito 
+    purchaseProducts = async (cid,pid) => {
+
+        try {
+            const cart = await this.getById(cid);
+            if (!cart) {
+                throw new Error(`Carrito con ID ${cid} no fue encontrado`);
+            }
+
+            // Buscar el producto en el carrito
+            const productInCart = cart.products.find(p => p.product.equals(pid));
+            if (!productInCart) {
+                throw new Error(`Producto con ID ${pid} no fue encontrado en el carrito`);
+            }
+
+            // Obtener detalles del producto
+            const productDetails = await productService.getById(pid);
+            if (!productDetails) {
+                throw new Error(`Detalles del producto con ID ${pid} no fueron encontrados`);
+            }
+
+            // Verificar si hay suficiente stock
+            if (productDetails.stock < productInCart.quantity) {
+                throw new Error(`No hay suficiente stock del producto con ID ${pid}`);
+            }
+
+            // Restar la cantidad comprada del stock del producto
+            productDetails.stock -= productInCart.quantity;
+            await productDetails.save();
+
+            // Eliminar el producto comprado del carrito
+            cart.products = cart.products.filter(p => !p.product.equals(pid));
+            await cart.save();
+
+            return {
+                product: productDetails,
+                quantity: productInCart.quantity,
+            };
+        } catch (error) {
+            console.error('Error al comprar un producto en el carrito:', error);
+            throw error;
+        }
+
+    }
+
     
-    
-    
 
 
 
-
-
-
-
-
-
+ 
 } //fin de la clase
 
 

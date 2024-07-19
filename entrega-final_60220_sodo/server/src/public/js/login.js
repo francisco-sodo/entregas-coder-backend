@@ -33,7 +33,7 @@ form.addEventListener('submit', e =>{
     })
 })
 
-
+// se envia un link al correo para resetear password
 const resetPasswordLink = document.getElementById('resetPasswordLink'); 
 
 resetPasswordLink.addEventListener('click', e => {

@@ -69,7 +69,9 @@ passport.use('github', new GitHubStrategy(
                     email: profile._json.email,
                     password: '',
                     loggedBy: 'GitHub',
-                    last_connection: profile._json.updated_at
+                    last_connection: profile._json.updated_at,
+                    
+                   
 
                 }
                 // si no, lo damos de alta

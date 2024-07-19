@@ -15,8 +15,8 @@ const userSchema = new mongoose.Schema({
     enum: ["user", "admin", "premium"],
   },
   cart: {
-    ref: "cart",
     type: Schema.Types.ObjectId,
+    ref: "cart",
   },
   documents:[
     {

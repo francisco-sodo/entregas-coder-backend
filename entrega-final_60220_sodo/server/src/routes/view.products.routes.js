@@ -2,14 +2,10 @@
 
 import { Router } from 'express';
 import { passportCall, authorization, } from "../utils.js";
-
-const router = Router()
-
-
 import { productService } from '../services/service.js';
-
 import { productsModel } from '../services/dao/db/models/products.model.js';
 
+const router = Router()
 
 
 
@@ -76,20 +72,30 @@ router.get('/', passportCall('jwt'), authorization('user','premium','admin'), as
         }
     }
 
+    let user = req.user
+    let cid = user.cart._id
+    //let pid = product._id
+
         res.render('products', {
             title: "Vista | Productos",
             styleProds: "styleProducts.css",
-            user: req.user,
+            user: user,
             products: result.docs,
             totalDocs: result.totalDocs,
             currentPage: result.page,
             totalPages: result.totalPages,
             prevLink: result.prevLink,
             nextLink: result.nextLink,
-            isValid: result.isValid
+            isValid: result.isValid,
+            isAdmin: req.user.role === 'admin',
+            isUser: req.user.role === 'user',
+            isPremium: req.user.role === 'premium',
+            cid: cid
          })
 
-         //console.log("USURUIOOOOOOO " + req.user.name)
+        console.log("CARRRTTT ID " + cid)
+        //console.log("PRODUCT ID " + pid)
+         //console.log("PROOOOOOOOOOO " + products)
 
     } catch (error) {
         console.error("Error al obtener productos paginados:", error);
@@ -105,9 +111,12 @@ router.get('/', passportCall('jwt'), authorization('user','premium','admin'), as
 //* VISTA DE UN SOLO PRODUCTO
 //EJ: http://localhost:8080/products/product/65f39b4e3942d59690fbe26f
 
-router.get('/product/:pid', async (req,res)=>{
+router.get('/product/:pid',passportCall('jwt'), authorization('user','premium','admin'), async (req,res)=>{
 
     let { pid } = req.params;
+    let user = req.user
+    let cid = user.cart._id
+    
    
 
     try {
@@ -116,19 +125,25 @@ router.get('/product/:pid', async (req,res)=>{
             res.status(404).send({ status: 404, error: 'No se encontró el producto' });
             return;
         }
+
         res.render('product', {
             title: "Vista | Producto",
-            product: product.map(item => ({
-                title: item.title,
-                price: item.price,
-                description: item.description,
-                code: item.code,
-                status: item.status,
-                stock: item.stock,
-                category: item.category,
-                thumbnails: item.thumbnails
-            }))
+            cid:cid,
+            product: {
+                _id: product._id,
+                title: product.title,
+                price: product.price,
+                description: product.description,
+                code: product.code,
+                status: product.status,
+                stock: product.stock,
+                category: product.category,
+                thumbnails: product.thumbnails
+            }
         });
+        // console.log("USEEEEERRR " + user)
+         console.log("CARRRTTT ID " + cid)
+         console.log("CPRODUUUUUCCCTT ID " + pid)
        
     } catch (error) {
         console.error('Error al obtener el producto por su ID:', error);

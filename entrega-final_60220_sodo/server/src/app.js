@@ -19,8 +19,6 @@ import initializePassport from './config/passport.config.js'; // esta viene del 
 //chat
 import chatController from './controllers/chat.controller.js'; // Importar el controlador de chat
 
-
-
 // logger
 import { addLogger } from './config/logger.js';
 

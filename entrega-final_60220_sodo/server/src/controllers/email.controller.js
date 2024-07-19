@@ -130,27 +130,9 @@ export const sendPurchaseConfirmationEmail = async (userEmail, ticket) => {
 };
 
 
-//TODO 2 -  APLICAR PARA MANDAR MAIL AL USUARIO DESPUES DE REGISTRARSE.
-
-// export const sendRegisterConfirmationEmail = async (userEmail, userName) => {
-//     try {
-//         const mailOptions = {
-//             from: config.gmailAccount, // e-commerce
-//             to: config.gmailAccount, // generar alguna cuenta destinataria para entrega
-//             subject: 'Bienvenido a nuestro E-commerce',
-//             html: `<div>
-//                     <h3>¡Bienvenido ${userName}!</h3>
-//                     <p>Ya puedes comenzar a comprar en nuestra tienda.</p>
-//                     </div>`,
-//         };
-
-//         await transporter.sendMail(mailOptions);
-//         console.log(`Correo de bienvenida enviado a ${userEmail}`);
-//     } catch (error) {
-//         console.error('Error al enviar el correo de bienvenida:', error);
-//     }
-// };
-
+/*=============================================
+=       Bienvenida a usuario registrado       =
+=============================================*/
 
 export const sendRegisterConfirmationEmail = async (userEmail, userName, userRole) => {
     let emailContent
@@ -198,7 +180,6 @@ const mailOptionsToReset = {
 export const tempDbMails = {}
 
 
-// APIS DE RESTABLECER PASS
 export const sendEmailToResetPassword = (req, res) => {
     try {
         const { email } = req.body
@@ -209,11 +190,11 @@ export const sendEmailToResetPassword = (req, res) => {
         //console.log(Date.now());
         const link = `http://localhost:8080/api/email/reset-password/${token}`;
 
-        // Store the email and its expiration time
-        //  60 * 60 * 1000: Esto representa una hora en milisegundos. Multiplicando 60 (segundos) por 60 (minutos) y luego por 1000 (milisegundos), obtenemos el equivalente a una hora en milisegundos.
         tempDbMails[token] = {
             email,
-            expirationTime: new Date(Date.now() + 1 * 60 * 1000)
+            //expirationTime: new Date(Date.now() + 60 * 60 * 1000) // 1 hora
+            expirationTime: new Date(Date.now() + 1 * 60 * 1000) // *1 minuto para probar
+            
         }
 
         console.log(tempDbMails);
@@ -254,3 +235,30 @@ export const resetPassword = (req, res) => {
       })
 
 }
+
+
+
+
+/*=============================================
+=      Cuenta borrada por inactividad         =
+=============================================*/
+export const sendInactivityDeletionEmail = async (userEmail, userName) => {
+    const emailContent = `
+        <h3>Hola ${userName},</h3>
+        <p>Tu cuenta ha sido eliminada debido a inactividad durante el último año.</p>
+    `;
+
+    try {
+        const mailOptions = {
+            from: config.gmailAccount,
+            to: config.gmailAccount, // generar alguna cuenta destinataria para entrega
+            subject: 'Cuenta Eliminada por Inactividad',
+            html: emailContent
+        };
+
+        await transporter.sendMail(mailOptions);
+        console.log(`Correo de eliminación por inactividad enviado a ${userEmail}`);
+    } catch (error) {
+        console.error('Error al enviar el correo de eliminación por inactividad:', error);
+    }
+};

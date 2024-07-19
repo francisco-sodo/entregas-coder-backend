@@ -1,9 +1,5 @@
-
-
 import { Router } from 'express';
-
-
-
+import { passportCall,authorization} from "../utils.js";
 import { cartService } from '../services/service.js';
 
 const router = Router()
@@ -11,16 +7,15 @@ const router = Router()
 
 
 
-//? BUSCAR Y MOSTRAR UN CARRITO POR SU ID MEDIANTE REQ.PARAMS
-//GET
+router.get('/:cid', passportCall('jwt'),authorization('user','premium'), async (req,res)=>{
+    
+    let user = req.user
+    let cid = user.cart._id
 
-router.get('/:cid', async (req,res)=>{
-    let { cid } = req.params; //! ESTO ME TRAE ":CID"...???
-    //cid = cid.toString()
-    //console.log("TIPO DE DATO:::::::::" + typeof(cid))
+
     
     try {
-        let cart = await cartService.getById(cid);
+        const cart = await cartService.getById(cid);
         if (!cart) {
             res.status(404).send({ status: 404, error: 'No se encontró el carrito' });
             return;
@@ -28,9 +23,11 @@ router.get('/:cid', async (req,res)=>{
 
         res.render('cart', {
             title: "Vista | Carrito",
-            _id: cid,
+            cid: cid,
+            owner: user.name,
             styleCart: "styleCart.css",
             products: cart.products.map(item => ({
+                pid: item.product._id,
                 title: item.product.title,
                 price: item.product.price,
                 quantity: item.quantity,
@@ -43,30 +40,6 @@ router.get('/:cid', async (req,res)=>{
         res.status(500).send({ status: 500, error: 'Error al obtener el carrito por su ID' });
     }
 });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

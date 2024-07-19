@@ -27,7 +27,7 @@ export const mockingProductsInDB = async (req, res) => {
         }
 
         // Generar productos
-        for (let i = 0; i < 2; i++) {
+        for (let i = 0; i < 10; i++) {
             const product = generateProduct(owner);
 
                 products.push(product);

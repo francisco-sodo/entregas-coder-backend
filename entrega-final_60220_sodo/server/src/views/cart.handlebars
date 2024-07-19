@@ -1,39 +1,55 @@
 <main>
-    <div class="cart-header">
-        <h1>Tu Carrito {{_id}}</h1>
-        
-         <button>Vaciar Carrito</button>
+    <div class="cart-header" data-cid="{{cid}}">
+        <h1>{{owner}}, este es tu carrito</h1>
+        {{!-- <p>El ID de tu carrito es {{cid}}</p> --}}
+
+        <button id="clear-cart-btn" onclick="clearCart()">Vaciar Carrito</button>
     </div>
 
-    {{#each products}}
-    <div class="product-container">
-
-        
-        <section class="product">
-
-            <div class="img-container">
-                <img src="{{this.thumbnails}}" alt="{{this.title}}">
-            </div>
-
-            <div class="info-container">
-                <h3>{{this.title}}</h3>
-                <p><b>Precio:</b> ${{this.price}}</p>
-                <p><b>Cantidad:</b> {{this.quantity}}</p>
-            </div>
-
-        </section>
-
-        <section class="btn-container">
-            <button>Comprar</button>
-            <button>Eliminar del carrito</button>      
-        </section> 
-
+    <div>
+        <a href="/products">Ver Productos</a>
     </div>
-        <hr> 
-    {{/each}}
+
+    <section id="products-list-container">
+
+        {{#if products.length}}
+
+        {{#each products}}
+        <div class="product-container">
+
+            <section class="product" data-cid="{{../cid}}" data-pid="{{this.pid}}">
+
+                <div class="img-container">
+                    <img src="{{this.thumbnails}}" alt="{{this.title}}" />
+                </div>
+
+                <div class="info-container">
+                    <h3>{{this.title}}</h3>
+                    <p><b>Precio:</b> ${{this.price}}</p>
+                    <p><b>Cantidad:</b> {{this.quantity}}</p>
+                    {{!-- <p><b>ID:</b> {{this.pid}}</p> --}}
+                </div>
+
+            </section>
+
+            <section class="btn-container">
+
+                <button onclick="purchase('{{../cid}}', '{{this.pid}}')">Comprar</button>
+                <button onclick="deleteProduct('{{this.pid}}')">Quitar</button>
+
+            </section>
+
+        </div>
+        <hr />
+        {{/each}}
+
+
+        {{else}}
+        <h3>Tu carrito está vacío</h3>
+        {{/if}}
+
+    </section>
 
 </main>
 
-
-{{!-- TODO logica en public --}}
-{{!-- <script src="/js/cart.js"></script> --}}
+<script src="/js/cartActions.js"></script>

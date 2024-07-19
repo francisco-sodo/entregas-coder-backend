@@ -77,7 +77,7 @@ export const PRIVATE_KEY = config.jwtPrivateKey;
 
 // 1) FUNCION PARA GENERAR TOKEN
 export const generateJWToken = (user) => {
-    return jwt.sign( {user} ,PRIVATE_KEY, { expiresIn: '1h'} );
+    return jwt.sign( {user} ,PRIVATE_KEY, { expiresIn: '2h'} );
 };
 
 

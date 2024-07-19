@@ -1,8 +1,9 @@
 
 import { createHash, isValidPassword, generateJWToken } from "../utils.js";
 import { userService, cartService } from "../services/service.js";
-import { tempDbMails, sendRegisterConfirmationEmail } from "./email.controller.js";
-import UsersDto from "../services/dto/user.dto.js";
+import { tempDbMails, sendRegisterConfirmationEmail, sendInactivityDeletionEmail } from "./email.controller.js";
+import {UsersDto} from "../services/dto/user.dto.js";
+import {UsersDtoSmall} from "../services/dto/user.dto.js";
 
 
 // errors handler
@@ -125,7 +126,7 @@ export const userLogin = async (req, res) => {
 
     // almacenando jwt en Cookies
     res.cookie("jwtCookieToken", access_token, {
-      maxAge: 600000,
+      maxAge: 900000, // 15 minutos
       httpOnly: true, //No se expone la cookie
     });
     res.sendSuccess({ access_token: access_token, id: user._id, cart: user.cart, last_connection: loginDate });
@@ -158,15 +159,21 @@ export const userRegisterByGithub = async (req, res) => {
     email: user.email,
     age: user.age,
     role: user.role,
-    cart: user.cart,
+    // cart: user.cart,
     };
+    const userCart = await cartService.create();
+    if(tokenUser.role !== "admin"){
+      tokenUser.cart = userCart
+       //userCart = tokenUser.cart
+    }
+    
 
-    console.log("TOKEN USER", tokenUser)
+    //console.log("TOKEN USER", tokenUser)
 
   const access_token = generateJWToken(tokenUser);
 
   res.cookie("jwtCookieToken", access_token, {
-    maxAge: 600000,
+    maxAge: 900000, // 15 minutos
     httpOnly: true, //No se expone la cookie
   });
   res.redirect("/products");
@@ -214,6 +221,39 @@ export const userLogout = async (req, res) => {
     return res.status(500).send({ error: "Error interno del servidor al cerrar sesión." });
   }
 };
+
+
+
+/*=============================================
+=      DELETE INACTIVE USERS (rol user)        =
+=============================================*/
+export const deleteInactiveUsers = async (req, res) => {
+  try {
+      const currentDate = new Date().toLocaleString("es-AR", { timeZone: "America/Argentina/Buenos_Aires" });
+      const parsedDate = new Date(currentDate)
+      const timeToDeleteInactiveUser = new Date(parsedDate.setFullYear(parsedDate.getFullYear() - 1)); // 1 año y se borra la cuenta
+      //const timeToDeleteInactiveUser = new Date(parsedDate.getTime() - (10 * 60 * 1000)); //* 10 minutos para probar
+
+
+      const inactiveUsers = await userService.getInactiveUsers(timeToDeleteInactiveUser);
+
+      const inactiveUserRole = inactiveUsers.filter(user => user.role === 'user');
+
+      for (const user of inactiveUserRole) {
+          await sendInactivityDeletionEmail(user.email, user.first_name);
+          await userService.delete(user._id);
+      }
+
+      res.sendSuccess({ message: 'Usuarios inactivos eliminados correctamente.' });
+  } catch (error) {
+      console.error('Error al eliminar usuarios inactivos:', error);
+      res.sendInternalServerError({ error: 'Error interno del servidor' });
+  }
+};
+
+
+
+
 
 
 
@@ -270,8 +310,12 @@ export const getAllUsers = async (req, res) => {
     if (!allUsers)
       return res.status(202).send({ error: "No hay usuarios para mostrar" });
 
-    res.sendSuccess(allUsers);
-    console.log("TOTAL DE USUARIOS: " + allUsers.length);
+     // Crear un objeto de usuario usando el DTO
+     const usersDto = allUsers.map(user => new UsersDtoSmall(user));
+
+    res.sendSuccess(usersDto);
+    console.log("TOTAL DE USUARIOS: " + usersDto.length);
+    
   } catch (error) {
     return res
       .status(500)

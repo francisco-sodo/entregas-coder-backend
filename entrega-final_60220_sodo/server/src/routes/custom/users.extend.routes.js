@@ -49,13 +49,14 @@ export default class UsersExtendRouter extends CustomRouter {
          // GET USER BY ID
          this.get('/current/:uid',["PUBLIC"],UserController.getUserById)
 
-
         // POST - upload files
         this.post('/:uid/documents', ["PUBLIC"], passportCall('jwt'), uploader.any(), UserController.uploadFiles);
 
-
          // PUT - CAMBIAR ROL user <-> premium
-         this.put('/premium/:uid', ["USER","PREMIUM"], UserController.switchRolUser)
+         this.put('/premium/:uid', ["USER","PREMIUM"], UserController.switchRolUser);
+
+         // DELETE - eliminar cuentas inactivas
+         this.delete('/inactive', ["ADMIN"], UserController.deleteInactiveUsers)
 
 
 

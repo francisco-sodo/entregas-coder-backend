@@ -24,5 +24,12 @@ export default class UserService {
         let result = await userModel.updateOne(filter, value );
         return result;
     }
+    
+    getInactiveUsers = async (date) => {
+        return await userModel.find({last_connection: {$lt: date} });
+    }
+    delete = async (uid) => {
+        return await userModel.findByIdAndDelete(uid)
+    }
 
 };

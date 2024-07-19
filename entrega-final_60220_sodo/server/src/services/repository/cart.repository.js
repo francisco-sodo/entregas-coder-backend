@@ -23,4 +23,7 @@ export default class CartsRepository {
     clear = (cid) => {
         return this.dao.clear(cid);
     }
+    purchaseProducts = (cid,pid) => {
+        return this.dao.purchaseProducts(cid,pid)
+    }
 }

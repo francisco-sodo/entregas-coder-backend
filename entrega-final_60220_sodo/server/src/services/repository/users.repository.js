@@ -18,5 +18,12 @@ export default class UsersRepository {
         return this.dao.update(filter, value);
     }
     
+    getInactiveUsers = (date) => {
+        return this.dao.getInactiveUsers(date);
+    }
+    delete = (uid) => {
+        return this.dao.delete(uid);
+    }
+    
 
 }

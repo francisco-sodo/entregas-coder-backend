@@ -34,30 +34,33 @@ router.get("/logout", (req, res) => {
 
 
 
-// Cuando ya tenemos una jwt activa con los datos del user, renderizamos la vista current
-// router.get("/", passportCall('jwt'), (req, res) => {
-
-// });
 
 
-router.get("/current", passportCall('jwt'), (req, res)=>{
+router.get("/current", passportCall('jwt'),authorization('admin','user','premium'), (req, res)=>{
 
   let role = req.user.role;
 
-  if(role === 'admin'){
-    res.redirect("/user/current/admin")
+  if (role === 'admin') {
+    res.redirect("/user/current/admin");
+  } else if (role === 'premium') {
+    res.redirect("/user/current/premium");
+  } else {
+    res.redirect("/user/current/user");
   }
 
-  if(role === 'premium'){
-      res.redirect("/user/current/premium")
-    
-  } else{
-    res.redirect("/user/current/user")
-  }
 });
 
 
-
+router.get("/current/premium", passportCall('jwt'), authorization('premium'), (req, res)=>{
+  res.render('profile',{
+    title: "Premium" ,
+    user: req.user,
+    role: req.user.role,
+    isAdmin: req.user.role === 'admin',
+    isUser: req.user.role === 'user',
+    isPremium: req.user.role === 'premium',
+  })
+});
 
 
 router.get("/current/admin", passportCall('jwt'), authorization('admin'), (req, res)=>{
@@ -65,26 +68,25 @@ router.get("/current/admin", passportCall('jwt'), authorization('admin'), (req, 
       title: "Admin" ,
       user: req.user,
       role: req.user.role,
+      isAdmin: req.user.role === 'admin',
+      isUser: req.user.role === 'user',
+      isPremium: req.user.role === 'premium',
     })
 });
 
 router.get("/current/user", passportCall('jwt'), authorization('user'), (req, res)=>{
-  // let cart = req.user.cart
-  // console.log("CAAAARRTTTT:::::"+cart)
   res.render('profile',{
     title: "User" ,
     user: req.user,
     role: req.user.role,
-    // cart
+    isAdmin: req.user.role === 'admin',
+    isUser: req.user.role === 'user',
+    isPremium: req.user.role === 'premium',
   })
 
-  router.get("/current/premium", passportCall('jwt'), authorization('premium'), (req, res)=>{
-    res.render('profile',{
-      title: "Premium" ,
-      user: req.user,
-      role: req.user.role,
-    })
-});
+
+
+
 });
 
 
