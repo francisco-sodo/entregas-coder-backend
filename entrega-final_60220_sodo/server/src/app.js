@@ -169,11 +169,13 @@ app.get("/logger-test", (req, res) => {
     // Logica, validaciones, etc...
 
     req.logger.debug("Prueba de log level debug --> en /logger-test");
+    //usar estos de abajo
     req.logger.info("Prueba de log level info --> en /logger-test");
     req.logger.http("Prueba de log level http --> en /logger-test");
     req.logger.warning("Prueba de log level warning --> en /logger-test");
     req.logger.error("Prueba de log level error --> en /logger-test");
     req.logger.fatal("Prueba de log level fatal --> en /logger-test");
+
     res.send("Prueba de logger!");
 
     //? podemos trabajar asi los logers en cualquier endpoint. Va a convivir con los demas logs generales a niver middleware. 

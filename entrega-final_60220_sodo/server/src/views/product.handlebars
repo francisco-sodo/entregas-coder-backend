@@ -17,9 +17,14 @@
         <li><b>Status:</b> {{product.status}}</li>
         <li><b>Stock:</b> {{product.stock}}</li>
         <li><b>Categoría:</b> {{product.category}}</li>
-        <li><b>ID:</b> {{product._id}}</li>
+        {{!-- <li><b>ID:</b> {{product._id}}</li> --}}
     </ul>
+    {{#if isNotAdmin}}
     <button onclick="addToCart('{{product._id}}')">Agregar al Carrito</button>
+    {{else}}
+    <button>Editar producto</button>
+    <p style="font-size: x-small;">Editar producto no esta desarrollado en vistas</p>
+    {{/if}}
 </div>
 
 

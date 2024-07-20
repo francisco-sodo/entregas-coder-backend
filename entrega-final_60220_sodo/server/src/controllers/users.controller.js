@@ -40,7 +40,9 @@ export const userRegister = async (req, res) => {
       // Verificar si el usuario ya existe
       const exists = await userService.getByUserName(email);
       if (exists) {
+          req.logger.error(`El usuario ${email} ya existe.`);
           return res.sendClientError({ message: `El usuario ${email} ya existe.` });
+          
       }
 
       
