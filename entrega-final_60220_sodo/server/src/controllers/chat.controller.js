@@ -1,8 +1,4 @@
-
-
 import ChatService from "../services/dao/db/chat.service.js";
-
-
 
 export default function chatController(ioServer) {
     const chatService = new ChatService();

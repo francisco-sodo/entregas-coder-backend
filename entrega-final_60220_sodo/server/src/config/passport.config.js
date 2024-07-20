@@ -28,10 +28,10 @@ const initializePassport = () => {
             jwtFromRequest: ExtractJWT.fromExtractors([cookieExtractor]),
             secretOrKey: PRIVATE_KEY
         }, async (jwt_payload, done) => {
-            console.log("Entrando a passport Strategy con JWT.");
+            //console.log("Entrando a passport Strategy con JWT.");
             try {
-                console.log("JWT obtenido del Payload");
-                console.log(jwt_payload);
+                //console.log("JWT obtenido del Payload");
+                //console.log(jwt_payload);
                 return done(null, jwt_payload.user)
             } catch (error) {
                 return done(error)
@@ -51,17 +51,15 @@ passport.use('github', new GitHubStrategy(
 
 
     }, async (accessToken, refreshToken, profile, done) => {
-        console.log('perfil obtenido del usuario');
-        console.log(profile);
+        //console.log('perfil obtenido del usuario');
+        //console.log(profile);
 
         try {
             const user = await userModel.findOne({ email: profile._json.email });
 
-            console.log("Usuario encontrado para login:")
-            console.log(user);
-            // si el usuario no se ha registrado anteriormente con github
+            //console.log("Usuario encontrado para login:", user)
             if(!user){
-                console.log("Usuario no existe con ese username: " + profile._json.email)
+                // si no se ha logueado antes, se lo registra
                 let newUser = {
                     first_name: profile._json.name,
                     last_name:'',
@@ -69,25 +67,19 @@ passport.use('github', new GitHubStrategy(
                     email: profile._json.email,
                     password: '',
                     loggedBy: 'GitHub',
-                    last_connection: profile._json.updated_at,
-                    
-                   
-
-                }
-                // si no, lo damos de alta
+                    last_connection: profile._json.updated_at
+                };
                 const result = await userModel.create(newUser)
                 return done(null,result)
             } else{
                 // si el usuario ya se registro anteriormente con github
                 return done(null,user)
             }
-            
         } catch (error) {
             return done(error)
-            
         }
     }
-))
+));
 
 
 
@@ -97,19 +89,17 @@ passport.use('github', new GitHubStrategy(
 
 passport.serializeUser((user, done) => {
     done(null, user._id)
-})
+});
 
 passport.deserializeUser(async (id, done) => {
     try {
         let user = await userModel.findById(id);
         done(null, user)
     } catch (error) {
-        console.error("Error deserializando el usuario: " + error);
+        //console.error("Error deserializando el usuario: " + error);
     }
 })
-
-
-};//fin de initializePassport
+};
 
 
 /*=============================================
@@ -118,13 +108,9 @@ passport.deserializeUser(async (id, done) => {
 
 const cookieExtractor = req => {
     let token = null;
-    console.log("Entrando a Cookie Extractor");
     if (req && req.cookies) {//Validamos que exista el request y las cookies.
-        console.log("Cookies presentes: ");
-        console.log(req.cookies);
+        //req.logger.info("Cookies presentes: ", req.cookies)
         token = req.cookies['jwtCookieToken']
-        console.log("Token obtenido desde Cookie:");
-        console.log(token);
     }
     return token;
 };

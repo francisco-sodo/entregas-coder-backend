@@ -4,12 +4,9 @@ import __dirname from '../utils.js';
 import { v4 } from 'uuid'
 
 
-
 /*=============================================
 =        configuraciones NODEMAILER           =
 =============================================*/
-
-
 // Configuracion de nodemailer - transport
 const transporter = nodemailer.createTransport({
     service: 'gmail',
@@ -23,61 +20,29 @@ const transporter = nodemailer.createTransport({
 // verificamos que los datos que estoy pasando a Nodemailer estan ok
 transporter.verify(function (error, success) {
     if (error) {
-        console.log(error);
+        throw Error(error);
     } else {
-        console.log('Server is ready to take our messages with Nodemailer');
+        success
     }
 })
 
 
 /*=============================================
-=                   PROBANDO                  =
+=                envio de email               =
 =============================================*/
-//configuracion del mail (para limpiar el codigo en las apis)
-const mailOptions = {
-    from: "Coder Test - " + config.gmailAccount,
-    to: config.gmailAccount,
-    subject: 'Correo de prueba CoderHouse 60220', 
-    html: `<div>
-                <h1>Test de envio de correos con Nodemailer!</h1>  
-           </div>`, 
-    attachments: [] 
-}
-
-// configuracion para enviar un adjunto, con opcion par adjuntar imagen en cuerpo
-const mailOptionsWithAttachments = {
-    from: "Coder Test - " + config.gmailAccount,
-    to: config.gmailAccount,
-    subject: 'Correo de prueba CoderHouse 60220',
-    html: ` <div>
-                <h1>Test de envio de correos con Nodemailer!</h1>
-                <p>Ahora usando imagenes: </p>
-                <img src="cid:gatito-random"/> 
-            </div>`,
-    attachments: [
-        {
-            filename: "gatito",
-            path: __dirname + '/public/assets/images/gatito.png',
-            cid: 'gatito-random' // por medio de este id puedo pasar la imagen al cuerpo del html
-        }
-    ]
-}
-
-// APIS
-
-// enviar mail
 export const sendEmail = (req, res) => {
     try {
-        transporter.sendMail(mailOptions, (error, info) => { // el objeto info tiene toda la data sobre el mail enviado
+        transporter.sendMail((error, info) => { // el objeto info tiene toda la data sobre el mail enviado
+
             if (error) {
-                console.log(error);
+                req.logger.error("Error al enviar un email" + error);
                 res.status(400).send({ message: "Error", payload: error });
             }
-            console.log('Message send: %s', info.messageId);
+            //console.log('Message send: %s', info.messageId);
             res.send({ message: "Success", payload: info });
         })
     } catch (error) {
-        console.error(error);
+        req.logger.error("500: No se pudo enviar el email desde:" + config.gmailAccount );
         res.status(500).send({ error: error, message: "No se pudo enviar el email desde:" + config.gmailAccount });
     }
 }
@@ -85,16 +50,17 @@ export const sendEmail = (req, res) => {
 // enviar mail con opcion par adjuntar imagen en cuerpo
 export const sendEmailWithAttachments = (req, res) => {
     try {
-        transporter.sendMail(mailOptionsWithAttachments, (error, info) => {
+            transporter.sendMail((error, info) => {
+
             if (error) {
-                console.log(error);
+                req.logger.error("Error al enviar un email con archivos adjuntos" + error);
                 res.status(400).send({ message: "Error", payload: error });
             }
-            console.log('Message send: %s', info.messageId);
+            //console.log('Message send: %s', info.messageId);
             res.send({ message: "Success", payload: info });
         })
     } catch (error) {
-        console.error(error);
+        req.logger.error("500: No se pudo enviar el email desde:" + config.gmailAccount );
         res.status(500).send({ error: error, message: "No se pudo enviar el email desde:" + config.gmailAccount });
     }
 }
@@ -123,9 +89,9 @@ export const sendPurchaseConfirmationEmail = async (userEmail, ticket) => {
         };
 
         await transporter.sendMail(mailOptions);
-        console.log(`Correo de confirmación de compra enviado a ${userEmail}`);
+        // console.log(`Correo de confirmación de compra enviado a ${userEmail}`);
     } catch (error) {
-        console.error('Error al enviar el correo de confirmación de compra:', error);
+        throw Error('Error al enviar el correo de confirmación de compra:', error);
     }
 };
 
@@ -158,9 +124,9 @@ export const sendRegisterConfirmationEmail = async (userEmail, userName, userRol
         };
 
         await transporter.sendMail(mailOptions);
-        console.log(`Correo de bienvenida enviado a ${userEmail}`);
+        //console.log(`Correo de bienvenida enviado a ${userEmail}`);
     } catch (error) {
-        console.error('Error al enviar el correo de bienvenida:', error);
+        throw Error('Error al enviar el correo de bienvenida:', error);
     }
 };
 
@@ -184,34 +150,35 @@ export const sendEmailToResetPassword = (req, res) => {
     try {
         const { email } = req.body
         if (!email) {
-            return res.status(400).send('Email not privided')
+            req.logger.warning('400: Debe proveer un email valido');
+            return res.status(400).send('Debe proveer un email valido')
+
         }
         const token = v4();
-        //console.log(Date.now());
         const link = `http://localhost:8080/api/email/reset-password/${token}`;
 
         tempDbMails[token] = {
             email,
-            //expirationTime: new Date(Date.now() + 60 * 60 * 1000) // 1 hora
-            expirationTime: new Date(Date.now() + 1 * 60 * 1000) // *1 minuto para probar
+            expirationTime: new Date(Date.now() + 60 * 60 * 1000) // 1 hora
+            //expirationTime: new Date(Date.now() + 1 * 60 * 1000) // *1 minuto para probar
             
         }
 
-        console.log(tempDbMails);
+        //console.log(tempDbMails);
 
         mailOptionsToReset.html = `To reset your password, click on the following link: <a href="${link}">Reset Password</a>`
 
 
         transporter.sendMail(mailOptionsToReset, (error, info) => {
             if (error) {
-                console.log(error);
                 res.status(500).send({ message: "Error", payload: error });
+                throw Error(error);
             }
-            console.log('Message sent: %s', info.messageId);
+            //console.log('Message sent: %s', info.messageId);
             res.send({ message: "Success", payload: info })
         })
     } catch (error) {
-        console.error(error);
+        //console.error(error);
         res.status(500).send({ error: error, message: "No se pudo enviar el email desde:" + config.gmailAccount });
     }
 }
@@ -219,15 +186,14 @@ export const sendEmailToResetPassword = (req, res) => {
 export const resetPassword = (req, res) => {
     const token = req.params.token;
     const email = tempDbMails[token];
-    console.log(email);
+    req.logger.info(email);
     const now = new Date()
     const expirationTime = email?.expirationTime
     if (now > expirationTime || !expirationTime) {
         delete tempDbMails[token]
-        console.log('expiration time completed');
+        req.logger.warning('expiration time completed');
         return res.redirect('/send-email-to-reset')
     }
-    //res.send('<h1>Start Reset Password Process</h1>');
     res.render('reset-password',{
         token,
         title: "Reset Password" ,
@@ -257,8 +223,8 @@ export const sendInactivityDeletionEmail = async (userEmail, userName) => {
         };
 
         await transporter.sendMail(mailOptions);
-        console.log(`Correo de eliminación por inactividad enviado a ${userEmail}`);
+        //console.log(`Correo de eliminación por inactividad enviado a ${userEmail}`);
     } catch (error) {
-        console.error('Error al enviar el correo de eliminación por inactividad:', error);
+        throw Error('Error al enviar el correo de eliminación por inactividad:', error);
     }
 };

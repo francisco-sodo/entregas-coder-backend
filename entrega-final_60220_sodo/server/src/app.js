@@ -1,11 +1,11 @@
 import express from "express";
 import __dirname from './utils.js';
 import handlebars from 'express-handlebars';
-import config from './config/config.js'; // configuraciones del archivo config
-import MongoSingleton from "./config/mongodb-singleton.js"; // clase para conectarnos a MongoDB con singleton
+import config from './config/config.js';
+import MongoSingleton from "./config/mongodb-singleton.js";
 import cors from 'cors';
 
-import { Server } from 'socket.io'; // este server se creara a partir del server http
+import { Server } from 'socket.io';
 
 // documentacion de apis
 import swaggerJsdoc from "swagger-jsdoc";
@@ -14,10 +14,10 @@ import swaggerUiExpress from "swagger-ui-express";
 //imports passport
 import cookieParser from "cookie-parser";
 import passport from 'passport';
-import initializePassport from './config/passport.config.js'; // esta viene del archivo passport.config
+import initializePassport from './config/passport.config.js'; 
 
 //chat
-import chatController from './controllers/chat.controller.js'; // Importar el controlador de chat
+import chatController from './controllers/chat.controller.js'; 
 
 // logger
 import { addLogger } from './config/logger.js';
@@ -46,7 +46,6 @@ import productsRoutes from './routes/products.routes.js';
 import viewProductsRoutes from './routes/view.products.routes.js'; 
 
 //users
-//instancia de la herencia del CustomRouter
 //* /api/extend/users
 import UsersExtendRouter from "./routes/custom/users.extend.routes.js";
 const usersExtendRouter = new UsersExtendRouter()
@@ -56,19 +55,14 @@ import viewUsersRoutes from './routes/view.users.routes.js'
 //* user login with Github
 import viewGithubLoginRoutes from './routes/view.github-login.routes.js'
 
-
 //* /api/email/ 
 import emailRoutes from './routes/email.routes.js'
-
 
 //* /chat/ -> DB HB WS
 import chatRoutes from './routes/chat.routes.js';
 
 //* /faker/
 import fakeProductsRoutes from './routes/fakeProducts.routes.js'
-
-
-
 
 
 /*=============================================
@@ -78,20 +72,16 @@ app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 
 
-
 /*=============================================
 =          middleware loggers nivel app       =
 =============================================*/
 app.use(addLogger);
 
 
-
 /*=============================================
 =       configuracion Middlewares CORS        =
 =============================================*/
-
 app.use(cors()) // CORS sin restricciones
-
 
 
 /*=============================================
@@ -117,17 +107,14 @@ initializePassport();
 app.use(passport.initialize());
 
 
-
 /*=============================================
 =             Declaración de Routers          =
 =============================================*/
-
 //* Ruta Telemetria. Testeando servidor
 app.get('/ping', (req,res)=>{
     res.send({ status: 'ok' })
-    console.log(__dirname);
+    //console.log(__dirname);
 })
-
 
 
 //* endpoint API CARRITO
@@ -143,7 +130,6 @@ app.use('/products/', viewProductsRoutes)
 
 
 //* endpoint API USERS
-// ruta para ejecutar metodo getRouter(), de CustomRouter 
 app.use("/api/extend/users", usersExtendRouter.getRouter())
 //* endpoint VISTA USERS
 app.use("/user", viewUsersRoutes);
@@ -163,38 +149,17 @@ app.use('/mockingproducts', fakeProductsRoutes)
 
 
 
-//* logger test
-app.get("/logger-test", (req, res) => {
-
-    // Logica, validaciones, etc...
-
-    req.logger.debug("Prueba de log level debug --> en /logger-test");
-    //usar estos de abajo
-    req.logger.info("Prueba de log level info --> en /logger-test");
-    req.logger.http("Prueba de log level http --> en /logger-test");
-    req.logger.warning("Prueba de log level warning --> en /logger-test");
-    req.logger.error("Prueba de log level error --> en /logger-test");
-    req.logger.fatal("Prueba de log level fatal --> en /logger-test");
-
-    res.send("Prueba de logger!");
-
-    //? podemos trabajar asi los logers en cualquier endpoint. Va a convivir con los demas logs generales a niver middleware. 
-
-});
-
-
 
 /*=============================================
 =           declaracion de PORT              =
 =============================================*/
-const SERVER_PORT = config.port; //dejamos de hardcodear el puerto, porque lo traemos desde config.js
+const SERVER_PORT = config.port;
 const httpServer = app.listen(SERVER_PORT, () => {
     console.log(`SERVER RUN ON PORT: ${SERVER_PORT}`)
 })
 
-//creamos un servidor para trabajar con sockets viviendo en nuestro servidor principal
+//servidor para trabajar con sockets viviendo en nuestro servidor principal
 export const ioServer = new Server(httpServer)
-
 
 
 /*=============================================
@@ -216,17 +181,14 @@ app.use('/apidocs', swaggerUiExpress.serve, swaggerUiExpress.setup(specs))
 
 
 
-
-
 /*=============================================
 =       connectMongoDB - singleton           =
 =============================================*/
-
 const mongoInstance = async () => {
     try {
         await MongoSingleton.getInstance();
     } catch (error) {
-        console.error(error);
+        //console.error(error);
         process.exit();
     }
 };

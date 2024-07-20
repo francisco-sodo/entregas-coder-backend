@@ -6,18 +6,16 @@ const router = Router()
 
 
 
-
 router.get('/:cid', passportCall('jwt'),authorization('user','premium'), async (req,res)=>{
     
     let user = req.user
     let cid = user.cart._id
 
-
-    
     try {
         const cart = await cartService.getById(cid);
         if (!cart) {
             res.status(404).send({ status: 404, error: 'No se encontró el carrito' });
+            req.logger.error("404: No se encontró el carrito");
             return;
         }
 
@@ -36,10 +34,16 @@ router.get('/:cid', passportCall('jwt'),authorization('user','premium'), async (
         });
        
     } catch (error) {
-        console.error('Error al obtener el carrito por su ID:', error);
         res.status(500).send({ status: 500, error: 'Error al obtener el carrito por su ID' });
+        req.logger.error("500: Error al obtener el carrito por su ID:" + error);
     }
 });
+
+// todo-  implementar esta vista
+// router.get("/error", (req, res)=>{
+//     res.render("error");
+//   });
+  
 
 
 

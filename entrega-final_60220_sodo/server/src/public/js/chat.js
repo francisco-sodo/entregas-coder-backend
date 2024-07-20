@@ -1,5 +1,5 @@
-//? LADO DEL CLIENTE
-// LADO DEL SERVIDOR EN /dao/db/MessageManager.js
+// LADO DEL CLIENTE
+// LADO DEL SERVIDOR en servicios y controller
 
 
 
@@ -34,20 +34,14 @@ Swal.fire({
     allowOutsideClick: false,
     showConfirmButton: false,
 }).then(result => {
-    //usamos la variable global user que declaramos arriba
     user = result.value
-
     // Cargamos Nombre en el Navegador
     const myName = document.getElementById('myName')
     myName.innerHTML = user
 })
 
 
-
-
-
-
-//? Guardar mensajes por usuario y mostrarlo en nuesto log de mensajes.
+// Guardar mensajes por usuario y mostrarlo en nuesto log de mensajes.
 //  Francisco : "Hola como estas?"
 chatBox.addEventListener('keyup', evt => {
     if(evt.key === 'Enter') {
@@ -55,7 +49,6 @@ chatBox.addEventListener('keyup', evt => {
         if(chatBox.value.trim().length > 0) {
             socket.emit('message', { user: user, message: chatBox.value })
             chatBox.value = '';
-
         }else {
             Toastify({
                 text: "Debes ingresar un mensaje",
@@ -75,7 +68,7 @@ chatBox.addEventListener('keyup', evt => {
 
 
 // Escuchamos a todos los usuarios que estan conectados
-// recivimos un array de objetos ---> [{ user: "Juan", message: "Hola" }, { user: "Elias", message: "Como estas?" }]
+// recibimos un array de objetos ---> [{ user: "Juan", message: "Hola" }, { user: "Elias", message: "Como estas?" }]
 socket.on('messageLogs', data => {
     const messageLogs = document.getElementById('messageLogs')
     let logs = '';
@@ -84,32 +77,24 @@ socket.on('messageLogs', data => {
         scrollToBottom()
     });
     messageLogs.innerHTML = logs
-
 })
 
 
-
-
-// 2da - parte
-// Aqui escuchamos los nuevos usuarios que se conectan al chat\
+// escuchamos los nuevos usuarios que se conectan al chat
 socket.on('userConnected', data => {
     let message = `Se ha conectado ${data}`
 
     Toastify({
         text: message,
         duration: 3000,
-        gravity: "top", // `top` or `bottom`
-        position: "right", // `left`, `center` or `right`
+        gravity: "top",
+        position: "right",
         style: {
           background: "linear-gradient(to right, rgba(31,189,228,1) 0%, rgba(7,157,73,1) 100%",
         }
       }).showToast();
 })
 
-
-/*=============================================
-=                   Extras                   =
-=============================================*/
 
 
 // close chatBox
@@ -120,8 +105,8 @@ closeChatBox.addEventListener('click', evt => {
     Toastify({
         text: "Has salido del chat",
         duration: 3000,
-        gravity: "top", // `top` or `bottom`
-        position: "right", // `left`, `center` or `right`
+        gravity: "top", 
+        position: "right", 
         style: {
           background: "linear-gradient(to right, rgba(228,67,31,1) 0%, rgba(255,175,0,1) 100%)",
         }
@@ -162,20 +147,11 @@ socket.on('closeMsg', data =>{
     Toastify({
         text: message,
         duration: 3000,
-        gravity: "top", // `top` or `bottom`
-        position: "right", // `left`, `center` or `right`
+        gravity: "top", 
+        position: "right", 
         style: {
           background: "linear-gradient(to right, rgba(228,31,187,1) 0%, rgba(255,145,0,1) 100%)",
         }
       }).showToast();
 })
 
-
-
-
-
-
-
-
-//* keys emitidas al back: 'userConnected', 'message', 'closeChat'
-//* keys escuchadas del back: 'messageLogs', 'userConnected'

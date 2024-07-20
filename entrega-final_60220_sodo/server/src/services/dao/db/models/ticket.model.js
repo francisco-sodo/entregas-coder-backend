@@ -7,8 +7,6 @@ const productSchema = new mongoose.Schema({
     quantity: { type: Number, required: true },
 });
 
-
-
 const ticketSchema = new mongoose.Schema({
     code:  {type: String, unique:true},
     purchase_datetime: String,
@@ -16,11 +14,9 @@ const ticketSchema = new mongoose.Schema({
     purchaser: String,
     // products: [{ type: String }],
     products: [productSchema],
-    
 },
 {
     timestamps: true,
-
 })
 
 const ticketModel = mongoose.model(ticketCollection, ticketSchema);

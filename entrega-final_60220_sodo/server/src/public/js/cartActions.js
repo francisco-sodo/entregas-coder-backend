@@ -34,7 +34,7 @@ function clearCart() {
     try {
             fetch(`/api/carts/${cartId}`, {
                 method: 'DELETE',
-                credentials: 'include', // Incluye las cookies de autenticación
+                credentials: 'include',
                 headers: {'Content-Type': 'application/json'}
             })
             .then(response => {
@@ -45,7 +45,6 @@ function clearCart() {
                     console.error('Error al vaciar el carrito');
                 }
             })
-
     } catch (error) {
         console.error('Error al realizar la solicitud:', error);
     }
@@ -57,20 +56,19 @@ function purchase(cid, pid) {
     try {
         fetch(`/api/carts/${cid}/product/${pid}/purchase`, {
             method: 'GET',
-            credentials: 'include', // Incluye las cookies de autenticación
+            credentials: 'include',
             headers: {'Content-Type': 'application/json'}
         })
-        .then(response => response.text()) // Obtén la respuesta como texto primero
+        .then(response => response.text())
         .then(text => {
-            console.log('Respuesta del servidor:', text); // Imprime la respuesta en la consola
-            return JSON.parse(text); // Luego intenta parsearla como JSON
+            return JSON.parse(text);
         })
         .then(data => {
             if (data.error) {
                 console.error('Error al comprar el producto:', data.error);
             } else {
+                //todo-  redirigir a vista compra exitosa y sacar el alert.
                 alert('Compra realizada con éxito. \nRevisa tu correo para ver los detalles en el Ticket.');
-                // Opcionalmente, actualiza la UI o redirige a otra página
                 location.reload()
             }
         })

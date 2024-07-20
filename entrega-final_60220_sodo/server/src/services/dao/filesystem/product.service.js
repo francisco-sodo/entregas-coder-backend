@@ -33,7 +33,7 @@ export class ProductServiceFileSystem {
         this.#fileSystem = fs
     }
    
- //todo **********   RANDOM ID   **************
+ //- **********   RANDOM ID   **************
   randomIdGenerator = async () => {
     let code = "";
     // Generar 3 números aleatorios entre 0 y 9
@@ -49,7 +49,7 @@ export class ProductServiceFileSystem {
   };   
     
 
-//todo **********   CREAR DIR O ARCHIVO SI NO EXISTEN   **************
+//- **********   CREAR DIR O ARCHIVO SI NO EXISTEN   **************
   createDirOrFile = async()=>{
     await this.#fileSystem.promises.mkdir(this.#productsDirPath, {
       recursive: true,
@@ -61,7 +61,7 @@ export class ProductServiceFileSystem {
 
 
 
-//todo **********   GET PRODUCTS   **************
+//- **********   GET PRODUCTS   **************
 getAll = async () => {
   try{
      await this.createDirOrFile()
@@ -76,7 +76,7 @@ getAll = async () => {
 }
 
 
-//todo **********   GET PRODUCT BY ID  **************
+//- **********   GET PRODUCT BY ID  **************
 getById = async (id) => {
      
     try{
@@ -96,7 +96,7 @@ getById = async (id) => {
 }
 
 
-//todo **********   ADD PRODUCT   **************
+//- **********   ADD PRODUCT   **************
 create = async ({title, description, code, price, status, stock, category, thumbnail}) => {
 
     //Verificar si todos los campos obligatorios están presentes y no son nulos o indefinidos
@@ -110,9 +110,6 @@ create = async ({title, description, code, price, status, stock, category, thumb
     newProduct.id = idProd
 
         try{
-            
-           
-
             await this.getAll()
             // verificando que no se repitan el code al ingresar productos
             const uniqueCode = this.#products.some(prod => prod.code === code);
@@ -127,13 +124,13 @@ create = async ({title, description, code, price, status, stock, category, thumb
 
         
         } catch(error){
-            console.error(`ERROR AL AGREGAR PRODUCTO NUEVO: ${error}`);
+            throw Error(`ERROR AL AGREGAR PRODUCTO NUEVO: ${error}`);
         }
 }
 
 
 
-//todo **********   UPDATE PRODUCT   **************
+//- **********   UPDATE PRODUCT   **************
 
     //recibimos producto y lo desestructuramos en los parametros para separar el id del resto de las propiedades
     update = async ({id,...updprod}) =>  {
@@ -160,7 +157,7 @@ create = async ({title, description, code, price, status, stock, category, thumb
     }
 
 
-//todo **********   DELETE PRODUCT   **************
+//- **********   DELETE PRODUCT   **************
     delete = async (id) => {
 
         try{
@@ -171,8 +168,7 @@ create = async ({title, description, code, price, status, stock, category, thumb
             //buscamos el registro por el id
             const productPosition = this.#products.findIndex((prod => prod.id === id));
                 if (productPosition < 0) {
-                return console.log('producto no encontrado');
-                
+                return console.log('producto no encontrado');   
             }
             // Eliminamos el registro
             this.#products.splice(productPosition, 1);

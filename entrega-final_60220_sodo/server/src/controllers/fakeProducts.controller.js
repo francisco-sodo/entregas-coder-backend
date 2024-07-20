@@ -36,7 +36,7 @@ export const mockingProductsInDB = async (req, res) => {
         const createdProducts = await productService.create(products);
         res.send({ status: "success", payload: createdProducts });
     } catch (error) {
-        console.error(error);
+        req.logger.error("No se han podido agregar los productos:" + error);
         res.status(500).send({ error: error, message: "No se han podido agregar los productos:" });
     }
 };

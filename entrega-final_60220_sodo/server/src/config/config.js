@@ -1,18 +1,13 @@
 import dotenv from "dotenv";
 import program from "../process.js";
 
-// capturamos la option gracias a commander por consola, con los flags. Ej, --mode development. 
 const environment = program.opts().mode;
 
-
-// este levanta los .env dentro de la carpeta config.
-// si el ambiente esta en production, levanta el env.production. Si no, levanta el env.development
 dotenv.config({
     path: environment === "production" ? "./src/config/.env.production" : "./src/config/.env.development"
 });
 
-
-export default { // esto lo va a consumir app.js
+export default { 
     port: process.env.SERVER_PORT,
     mongoUrl: process.env.MONGO_URL,
     mongoUrlTest: process.env.MONGO_URL_TEST,

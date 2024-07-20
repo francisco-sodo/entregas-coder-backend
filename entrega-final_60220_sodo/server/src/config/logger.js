@@ -42,7 +42,11 @@ const devLogger = winston.createLogger({
 const prodLogger = winston.createLogger({
     levels: customLevelsOptions.levels,
     transports: [
-        new winston.transports.Console({ level: "info" }),
+        new winston.transports.Console({ level: "info",
+            format: winston.format.combine(
+                winston.format.simple()
+            )
+         }),
         new winston.transports.File({ filename: './errors.log', level: "error" })
     ]
 })
@@ -62,12 +66,12 @@ export const addLogger = (req, res, next) => {
 
     } else {
         req.logger = devLogger;
-        
+
         // req.logger.fatal(`${req.method} en ${req.url} - at ${new Date().toLocaleDateString()} - ${new Date().toLocaleTimeString()}`)
         //req.logger.error(`${req.method} en ${req.url} - at ${new Date().toLocaleDateString()} - ${new Date().toLocaleTimeString()}`)
         // req.logger.warning(`${req.method} en ${req.url} - at ${new Date().toLocaleDateString()} - ${new Date().toLocaleTimeString()}`)
-        //req.logger.http(`${req.method} en ${req.url} - at ${new Date().toLocaleDateString()} - ${new Date().toLocaleTimeString()}`)
-        req.logger.info(`${req.method} en ${req.url} - at ${new Date().toLocaleDateString()} - ${new Date().toLocaleTimeString()}`)
+        req.logger.http(`${req.method} en ${req.url} - at ${new Date().toLocaleDateString()} - ${new Date().toLocaleTimeString()}`)
+        //req.logger.info(`${req.method} en ${req.url} - at ${new Date().toLocaleDateString()} - ${new Date().toLocaleTimeString()}`)
         // req.logger.debug(`${req.method} en ${req.url} - at ${new Date().toLocaleDateString()} - ${new Date().toLocaleTimeString()}`)
     }
 

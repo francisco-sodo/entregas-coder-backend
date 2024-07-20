@@ -54,8 +54,8 @@ export default class CustomRouter {
 
 
     handlePolicies = policies => (req, res, next) => {
-        console.log("Politicas a evaluar:");
-        console.log(policies);
+        // console.log("Politicas a evaluar:");
+        // console.log(policies);
 
         //Validar si tiene acceso publico:
         if (policies.includes("PUBLIC")) return next() //Puede entrar cualquiera 
@@ -63,8 +63,8 @@ export default class CustomRouter {
         
         //El JWT token se guarda en los headers de autorización.
         const authHeader = req.headers.authorization;
-        console.log("Token present in header auth:");
-        console.log(authHeader);
+        //console.log("Token present in header auth:");
+       // console.log(authHeader);
         if (!authHeader) {
             return res.status(401).send({ error: "User not authenticated or missing token." });
         }
@@ -80,19 +80,17 @@ export default class CustomRouter {
         
             if (!policies.includes(user.role.toUpperCase())) 
             return res.status(403).send({ error: "El usuario no tiene privilegios, revisa tus roles!" });
-           
             // si el rol (user.role) se encuentra dentro de policies, podes ingresar
             req.user = user;
-            console.log(req.user);
+            //console.log(req.user);
             next();
         });
-
     }
 
 
 
+    // Custom responses
     generateCustomResponses = (req, res, next) => {
-        // Custom responses
         res.sendSuccess = payload => res.status(200).send({ status: "Success", payload })
         res.sendNotFoundResource = error => res.status(202).send({ status: "Not Found", error })
         res.sendInternalServerError = error => res.status(500).send({ status: "Error", error })
@@ -109,7 +107,7 @@ export default class CustomRouter {
             try {
                 await callback.apply(this, params)//con apply ejecutamos lo que esta dentro del this.get de la herencia (el callback. (req,res,next))
             } catch (error) {
-                console.log(error);
+                //console.log(error);
                 params[1].status(500).send(error) // hace referencia al res
             }
         })

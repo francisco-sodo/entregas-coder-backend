@@ -4,7 +4,6 @@ import ticketModel from './models/ticket.model.js';
 
 export default class TicketService {
     constructor(){
-
     }
 
 
@@ -27,11 +26,8 @@ export default class TicketService {
     
             return savedTicket;
         } catch (error) {
-            console.error('Error al generar el ticket:', error);
-            throw error;
+            throw Error('Error al generar el ticket:', error);
         }
-
-
     }
 }
 

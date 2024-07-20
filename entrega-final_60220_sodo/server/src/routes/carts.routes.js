@@ -1,12 +1,6 @@
 import { Router } from 'express'
-
-
 import { passportCall,authorization} from "../utils.js";
-
-// importamos todos los metodos de carts controller
-
 import * as CartController from '../controllers/carts.controller.js'
-
 
 
 const router = Router()
@@ -33,10 +27,7 @@ router.delete('/:cid/product/:pid', passportCall('jwt'),authorization('user','pr
 // CLEAR CART
 router.delete('/:cid', passportCall('jwt'),authorization('user','premium'), CartController.clearCart)
 
-
 // PURCHASE PRODUCT
-//router.get('/:cid/purchase', passportCall('jwt'),authorization('user','premium'), CartController.purchaseProduct)
-
 router.get('/:cid/product/:pid/purchase', passportCall('jwt'),authorization('user','premium'), CartController.purchaseProductInCart)
 
 

@@ -26,13 +26,9 @@ const userSchema = new mongoose.Schema({
   last_connection: { type: String, default: null },
 });
 
-
-
-
 userSchema.pre("findOne", function () {
   this.populate("cart");
 });
-
 
 //formatear el Date de last_connection antes de que se guarde en la db
 userSchema.pre("create", function (next) {
@@ -44,7 +40,5 @@ userSchema.pre("create", function (next) {
 });
 
 
-
 const userModel = mongoose.model(userCollection, userSchema);
-
 export default userModel;

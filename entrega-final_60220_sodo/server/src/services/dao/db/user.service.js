@@ -2,7 +2,6 @@ import userModel from './models/user.model.js';
 
 export default class UserService {
     constructor(){
-        //console.log("Calling users model using a service.");
     };  
     getAll = async () => {
         let users = await userModel.find();

@@ -5,7 +5,7 @@ import { productsModel } from "../services/dao/db/models/products.model.js";
 
 const router = Router();
 
-//*PAGINATION con HB. VISTA DE TODOS LOS PRODUCTOS
+//PAGINATION con HB. VISTA DE TODOS LOS PRODUCTOS
 // EJ: http://localhost:8080/products?page=1
 
 router.get("/", passportCall("jwt"), authorization("user", "premium", "admin"), async (req, res) => {
@@ -100,10 +100,6 @@ router.get("/", passportCall("jwt"), authorization("user", "premium", "admin"), 
           isPremium: req.user.role === "premium",
           cid: cid,
         });
-
-        //console.log("CARRRTTT ID " + cid)
-        //console.log("PRODUCT ID " + pid)
-        //console.log("PROOOOOOOOOOO " + products)
       } else {
         res.render("products", {
           title: "Vista | Productos",
@@ -122,13 +118,12 @@ router.get("/", passportCall("jwt"), authorization("user", "premium", "admin"), 
         });
       }
     } catch (error) {
-      console.error("Error al obtener productos paginados:", error);
       res.status(500).send("Error interno del servidor");
+      req.logger.error("500: Error al obtener productos paginados:" + error);
     }
-  }
-);
+  });
 
-//* VISTA DE UN SOLO PRODUCTO
+// VISTA DE UN SOLO PRODUCTO
 //EJ: http://localhost:8080/products/product/65f39b4e3942d59690fbe26f
 
 router.get("/product/:pid",passportCall("jwt"),authorization("user", "premium", "admin"),async (req, res) => {
@@ -141,6 +136,7 @@ router.get("/product/:pid",passportCall("jwt"),authorization("user", "premium", 
         res
           .status(404)
           .send({ status: 404, error: "No se encontró el producto" });
+          req.logger.error("404: No se encontró el producto");
         return;
       }
 
@@ -164,9 +160,6 @@ router.get("/product/:pid",passportCall("jwt"),authorization("user", "premium", 
             thumbnails: product.thumbnails,
           },
         });
-        //console.log("USEEEEERRR " + user)
-        //console.log("CARRRTTT ID " + cid)
-        //console.log("CPRODUUUUUCCCTT ID " + pid)
       } else {
         res.render("product", {
           title: "Vista | Producto",
@@ -185,10 +178,10 @@ router.get("/product/:pid",passportCall("jwt"),authorization("user", "premium", 
         });
       }
     } catch (error) {
-      console.error("Error al obtener el producto por su ID:", error);
       res
-        .status(500)
-        .send({ status: 500, error: "Error al obtener el producto por su ID" });
+      .status(500)
+      .send({ status: 500, error: "Error al obtener el producto por su ID" });
+      req.logger.error("Error al obtener el producto por su ID:" + error);
     }
   }
 );

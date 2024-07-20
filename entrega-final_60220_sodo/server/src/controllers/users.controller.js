@@ -25,7 +25,7 @@ export const userRegister = async (req, res) => {
       const { first_name, last_name, email, age, password, role } = req.body;
 
 
-      //? error handler
+      // error handler
      if(!first_name || !email || !password){
      
       CustomError.createError({
@@ -42,11 +42,8 @@ export const userRegister = async (req, res) => {
       if (exists) {
           req.logger.error(`El usuario ${email} ya existe.`);
           return res.sendClientError({ message: `El usuario ${email} ya existe.` });
-          
       }
 
-      
-      
       // Crear un objeto de usuario usando el DTO
       const userDto = new UsersDto({
           first_name,
@@ -66,7 +63,7 @@ export const userRegister = async (req, res) => {
 
       // Crear el usuario utilizando el servicio de usuarios
       const result = await userService.create(userDto);
-      console.log("usuario creado::::::"+result)
+      req.logger.info(`usuario creado: \nNombre: ${first_name} ${last_name}, \nEmail: ${email}, \nRole: ${role}`);
 
       // Enviar correo de bienvenida
       await sendRegisterConfirmationEmail(email,first_name,role);
@@ -75,7 +72,6 @@ export const userRegister = async (req, res) => {
           message: "Usuario creado exitosamente con ID: " + result.id,
       });
   } catch (error) {
-      console.error(error);
       res.sendInternalServerError({ error: "Error interno del servidor" });
   }
 };
@@ -89,17 +85,16 @@ export const userLogin = async (req, res) => {
   const { email, password } = req.body;
   try {
     const user = await userService.getByUserName(email);
-    // console.log("Usuario encontrado para login+++:");
-    // console.log(user);
-    if (!user) {
-      console.warn("User doesn't exists with username: " + email);
 
+    if (!user) {
+      req.logger.warning(`El usuario con el email: ${email} no exixste`);
       return res.sendNotFoundResource({
-        message: "Usuario no encontrado con username: " + email,
+        message: "Usuario no encontrado con email: " + email,
       });
     }
     if (!isValidPassword(user, password)) {
-      console.warn("Invalid credentials for user: " + email);
+      req.logger.warning(`Algunas de tus credenciales son incorrectas`);
+
       return res.sendUnauthorizedError({
         error: "User not authenticated or missing token.",
       });
@@ -119,27 +114,23 @@ export const userLogin = async (req, res) => {
       age: user.age,
       role: user.role,
       cart: user.cart,
+      documents: user.documents,
       last_connection: updatedUser.last_connection, 
     };
    
     const access_token = generateJWToken(tokenUser);
-    // console.log(":::: access_token ::::");
-    // console.log(access_token)
-
+    
     // almacenando jwt en Cookies
     res.cookie("jwtCookieToken", access_token, {
       maxAge: 900000, // 15 minutos
       httpOnly: true, //No se expone la cookie
     });
     res.sendSuccess({ access_token: access_token, id: user._id, cart: user.cart, last_connection: loginDate });
-
-    console.log(":::: USUARIO LOGUEADO :::: >>>> LOGINTDATE: ",loginDate);
-    console.log(tokenUser)
-
-
-
+    
+    req.logger.info(`:::: USUARIO LOGUEADO :::: \nUsuario: ${tokenUser.email} \nLogin Date: ${loginDate}`);
+ 
   } catch (error) {
-    console.error(error);
+    req.logger.error("500: El login de usuario ha fallado. " + error);
     return res.sendInternalServerError({ error: "Internal Server Error" });
   }
 };
@@ -161,16 +152,14 @@ export const userRegisterByGithub = async (req, res) => {
     email: user.email,
     age: user.age,
     role: user.role,
-    // cart: user.cart,
     };
     const userCart = await cartService.create();
     if(tokenUser.role !== "admin"){
       tokenUser.cart = userCart
-       //userCart = tokenUser.cart
     }
     
-
-    //console.log("TOKEN USER", tokenUser)
+    req.logger.info(`:::: USUARIO LOGUEADO :::: \nUsuario: ${tokenUser.email}`);
+    // req.logger.info(`:::: USUARIO LOGUEADO :::: \nUsuario: ${tokenUser.cart}`);
 
   const access_token = generateJWToken(tokenUser);
 
@@ -182,7 +171,7 @@ export const userRegisterByGithub = async (req, res) => {
 
     
   } catch (error) {
-    console.error(error);
+    req.logger.error("500: El login de usuario mediante Github ha fallado. " + error);
     return res.sendInternalServerError({ error: "Internal Server Error" });
   }
 };
@@ -197,7 +186,6 @@ export const userRegisterByGithub = async (req, res) => {
 export const userLogout = async (req, res) => {
 
   const user = req.user
-  //console.log('<<<<<<<<<<<<<????????????????<<<<<<<<<<<<<<<<', user.email)
 
   try {
 
@@ -212,14 +200,14 @@ export const userLogout = async (req, res) => {
 
     res.clearCookie('jwtCookieToken');
 
-    console.log('LOGOUTDATE', updatedUser.last_connection)
-    //console.log('<<<<<<<<<<<<<????????????????<<<<<<<<<<<<<<<<', updatedUser.user)
+    req.logger.info(`LOGOUTDATE: ${updatedUser.last_connection}`);
+
 
 
     res.status(200).send({ message: "¡Sesión cerrada correctamente!", last_connection: updatedUser.last_connection});
     
   } catch (error) {
-    console.error(error);
+    req.logger.error("500: Error interno del servidor al cerrar sesión. " + error);
     return res.status(500).send({ error: "Error interno del servidor al cerrar sesión." });
   }
 };
@@ -248,14 +236,10 @@ export const deleteInactiveUsers = async (req, res) => {
 
       res.sendSuccess({ message: 'Usuarios inactivos eliminados correctamente.' });
   } catch (error) {
-      console.error('Error al eliminar usuarios inactivos:', error);
+      req.logger.error("500: Error interno del servidor. " + error);
       res.sendInternalServerError({ error: 'Error interno del servidor' });
   }
 };
-
-
-
-
 
 
 
@@ -268,18 +252,18 @@ export const resetPass = async (req, res) => {
   try {
     const { token, email, password } = req.body;
     const userEmail = tempDbMails[token];
-    console.log('USER EMAIL @@@@@@',userEmail)
+    req.logger.info(`USER EMAIL @@@@@@, ${userEmail}`);
+
 
     if (!userEmail || userEmail.email !== email) {
-      return res.status(400).send({ message: "Invalid or expired token." });
+      return res.status(400).send({ message: "el token ha expirado o no es válido." });
     }
 
-    // Delete the token from temporary storage
     delete tempDbMails[token];
 
     const user = await userService.getByUserName(email);
     if (!user) {
-      return res.status(404).send({ message: "User not found." });
+      return res.status(404).send({ message: "User no encontrado." });
     }
 
     // Actualiza la contraseña
@@ -296,8 +280,8 @@ export const resetPass = async (req, res) => {
 
    
   } catch (error) {
-      console.error(error);
-      res.sendInternalServerError({ error: "Error interno del servidor" });
+    req.logger.error("500: Error interno del servidor. " + error);
+    res.sendInternalServerError({ error: "Error interno del servidor" });
   }
 };
 
@@ -316,12 +300,11 @@ export const getAllUsers = async (req, res) => {
      const usersDto = allUsers.map(user => new UsersDtoSmall(user));
 
     res.sendSuccess(usersDto);
-    console.log("TOTAL DE USUARIOS: " + usersDto.length);
-    
+    req.logger.info(`TOTAL DE USUARIOS: ${usersDto.length}`);
+ 
   } catch (error) {
-    return res
-      .status(500)
-      .send({ status: "error", error: "Error interno de la applicacion." });
+    req.logger.error("500: Error interno del servidor. " + error);
+    return res.status(500).send({ status: "error", error: "Error interno de la applicacion." });
   }
 };
 
@@ -345,9 +328,8 @@ export const getUserById = async (req, res) => {
       })
     }
   } catch (error) {
-    return res
-      .status(500)
-      .send({ status: "error", error: "Error interno de la applicacion." });
+    req.logger.error("500: Error interno del servidor. " + error);
+    return res.status(500).send({ status: "error", error: "Error interno de la applicacion." });
   }
 };
 
@@ -365,8 +347,8 @@ export const uploadFiles = async (req, res) => {
     if (!files) {
       return res.status(400).send({ status: "error", error: "No ha cargado ningun archivo" });
     }
-    console.log('ARCHIVOS:', files); 
-    
+    req.logger.info(`ARCHIVOS: ${files}`);
+
     if (!userId) {
       return res.status(404).send({ status: "error", error: "Usuario no encontrado" });
     }
@@ -376,9 +358,6 @@ export const uploadFiles = async (req, res) => {
     files.forEach(file => {
       updatedDocuments.push({ name: file.fieldname, reference: file.filename, size: file.size});
     });
-
-
-    //console.log('ARCHIVOS SUBIDOS:', updatedDocuments); 
     
     await userService.update(
       { _id: userId },
@@ -391,12 +370,10 @@ export const uploadFiles = async (req, res) => {
     res.status(200).send({ status: "success", message: "Archivos subidos con exito", documents: updatedDocuments, uploadedBy: userId.email, uploadedFilesType: uploadedFilesType });
     
   } catch (error) {
-    console.error(error);
+    req.logger.error("500: Error interno del servidor. " + error);
     return res.status(500).send({ status: "error", error: "Error interno del servidor." });
   }
 };
-
-
 
 
 
@@ -411,8 +388,7 @@ export const switchRolUser = async (req, res) => {
   try {
     
     const user = await userService.getById(uid);
-    //console.log('USERRRRRRRRR', user)
-    //console.log('USERRDOCUMENTS', user.documents)
+  
     if (!user) {
         return res.status(404).send({ message: `Usuario con ID ${uid} no encontrado.` });
     }
@@ -442,7 +418,7 @@ export const switchRolUser = async (req, res) => {
 
    
   } catch (error) {
-    console.error(error);
+    req.logger.error("500: Error interno del servidor. " + error);
     return res.status(500).json({ error: "Error interno del servidor." });
   }
 };

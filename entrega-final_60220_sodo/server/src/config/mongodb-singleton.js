@@ -2,6 +2,7 @@ import mongoose from 'mongoose'
 import config from './config.js'
 
 
+
 export default class MongoSingleton {
     static #instance;
 
@@ -11,7 +12,7 @@ export default class MongoSingleton {
 
     static getInstance() {
         if (this.#instance) {
-            console.log("Ya se ha abierto una conexion a MongoDB.");
+            //console.log("Ya se ha abierto una conexion a MongoDB.");
         } else {
             this.#instance = new MongoSingleton()
         }
@@ -21,15 +22,14 @@ export default class MongoSingleton {
 
     #connectMongoDB = async () => {
         try {
-
             mongoose.connect(config.mongoUrl,
             {
                 w: 1,
             }
         );
-            console.log("Conectado con exito a MongoDB usando Mongoose.");
+            //console.log("Conectado con exito a MongoDB usando Mongoose.");
         } catch (error) {
-            console.error("No se pudo conectar a la BD usando Mongoose: " + error);
+            //console.error("No se pudo conectar a la BD usando Mongoose: " + error);
             process.exit();
         }
     }

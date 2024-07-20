@@ -1,8 +1,4 @@
-
-
 // CAPTURAMOS LOS DATOS DEL FORMULARIO login MEDIANTE EL ID
-
-
 const form = document.getElementById('loginForm')
 
 form.addEventListener('submit', e =>{
@@ -11,8 +7,7 @@ form.addEventListener('submit', e =>{
     const data = new FormData(form)
     const obj = {}
     data.forEach((value, key)=> obj[key] = value)
-   
-    // generamos el obj. Ahora hay queenviarlo mediante fetch para hacer request a las APIS
+    // generamos el obj. Ahora hay que enviarlo mediante fetch para hacer request a las APIS
     fetch('/api/extend/users/login', {
         method: 'POST', //especificamos metodo
         body:  JSON.stringify(obj),// pasamos el contenido en json stringify
@@ -21,13 +16,12 @@ form.addEventListener('submit', e =>{
         if(result.status === 200){
             result.json()
             .then(json => {
-                console.log("Cookies generadas:");
-                console.log(document.cookie);
-                window.location.replace('/user/current')// si es exitoso, redireccionamos a current
-                //window.location.replace('/products')// si es exitoso, redireccionamos a products
+                //console.log("Cookies generadas:");
+                //console.log(document.cookie);
+                window.location.replace('/user/current')
+                //window.location.replace('/products')
             })
         } else if (result.status === 401) {
-            console.log(result);
             alert("Login invalido revisa tus credenciales!");
         }
     })
@@ -47,8 +41,7 @@ resetPasswordLink.addEventListener('click', e => {
             headers: {'Content-Type': 'application/json'}
         }).then(result => {
             if (result.status === 200) {
-            //if (result) {
-                alert("Se ha enviado un email para restablecer tu contraseña a tu gmailAccount");
+                alert("Se ha enviado un email para restablecer tu contraseña");
             } else {
                 alert("No se pudo enviar el email. Por favor, revisa tu dirección de correo.");
             }

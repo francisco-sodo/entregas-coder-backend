@@ -6,7 +6,6 @@ import { productService } from '../../service.js';
 
 export default class CartsServiceMongo {
     constructor() {
-        //console.log("Working carts with Database persistence in mongodb");
     }
 
 
@@ -17,8 +16,7 @@ export default class CartsServiceMongo {
             return carts.map(cart => cart.toObject());
                 
         } catch (error) {
-            console.error('Error al obtener los carritos', error);
-            throw error; 
+            throw Error('Error al obtener los carritos', error);
         }
     }
 
@@ -26,27 +24,23 @@ export default class CartsServiceMongo {
     //get by id A2
     getById = async (cid) => {
         try {
-            //let cartById = await cartsModel.findOne({_id:cid});
             let cartById = await cartsModel.findById(cid);
             return cartById
             
         } catch (error) {
-            console.error('Error al buscar un carrito por su id:', error);
-            throw error; 
+            throw Error('Error al buscar un carrito por su id:', error);
         }
     }
 
 
     //post A3
     create = async (cart) => {
-        
         try {
             let newCart = await cartsModel.create(cart);
             return newCart
             
         } catch (error) {
-            console.error('Error al crear un carrito', error);
-            throw error;  
+            throw Error('Error al crear un carrito', error); 
         }
     }
 
@@ -55,7 +49,6 @@ export default class CartsServiceMongo {
     update = async (cid, pid) => {
         try {
             let cart = await cartsModel.findOne({_id:cid});
-            //let cart = await cartsModel.findById(cid);
             if (!cart) {
                 throw new Error(`Carrito con ID ${cid} no encontrado`);
             }
@@ -69,12 +62,10 @@ export default class CartsServiceMongo {
                 // Si el producto no existe en el carrito, lo agregamos con cantidad 1
                 cart.products.push({ product: pid, quantity: 1 });
             }
-    
             await cart.save();
             return cart;
         } catch (error) {
-            console.error('Error al agregar un producto al carrito:', error);
-            throw error;
+            throw Error('Error al agregar un producto al carrito:', error);
         }
     }
 
@@ -93,8 +84,7 @@ export default class CartsServiceMongo {
             return newProdQuantity
             
         } catch (error) {
-            console.error('Error al modificar la cantidad de un producto en este carrito:', error);
-            throw error;
+            throw Error('Error al modificar la cantidad de un producto en este carrito:', error);
         }
     }
 
@@ -108,8 +98,7 @@ export default class CartsServiceMongo {
             return deleteProduct
             
         } catch (error) {
-            console.error('Error al eliminar un producto del carrito:', error);
-            throw error;
+            throw Error('Error al eliminar un producto del carrito:', error);
         }
     }
 
@@ -122,10 +111,8 @@ export default class CartsServiceMongo {
             return clearCart
             
         } catch (error) {
-            console.error('Error al vaciar el carrito:', error);
-            throw error;
+            throw Error('Error al vaciar el carrito:', error);
         }
-       
     }
 
 
@@ -171,10 +158,8 @@ export default class CartsServiceMongo {
                 quantity: productInCart.quantity,
             };
         } catch (error) {
-            console.error('Error al comprar un producto en el carrito:', error);
-            throw error;
+            throw Error('Error al comprar un producto en el carrito:', error);
         }
-
     }
 
     

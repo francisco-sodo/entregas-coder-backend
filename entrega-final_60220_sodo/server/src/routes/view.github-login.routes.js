@@ -8,9 +8,9 @@ router.get('/login', (req,res) =>{
         styleGithubLogin: "StyleGithubLogin.css",
     })
 })
-
 router.get('/error', (req,res) =>{
     res.render('error', {error: "No se pudo autenticar usando Github"})
+    req.logger.error("No se pudo autenticar usando Github");
 })
 
 

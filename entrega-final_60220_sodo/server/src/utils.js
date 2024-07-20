@@ -1,20 +1,11 @@
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
-
 import {faker} from '@faker-js/faker'
-
-
-
 import multer from 'multer';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import passport from 'passport';
-
 import config from './config/config.js'
-
-
-
-
 
 
 // config ruta absoluta
@@ -39,7 +30,6 @@ const storage = multer.diskStorage({
         else {
             uploadPath += 'assets/documents/';
         }
-  
       cb(null, uploadPath); // carpeta de destino dinámica
     },
     filename: function (req, file, cb) {
@@ -55,8 +45,6 @@ export const uploader = multer({
     }
 })
 
-
-
 /*=============================================
 =                   BCRYPT                   =
 =============================================*/
@@ -66,13 +54,10 @@ export const createHash = password => bcrypt.hashSync(password,bcrypt.genSaltSyn
 export const isValidPassword = (user,password) => bcrypt.compareSync(password, user.password)
 
 
-
-
 /*=============================================
 =                     JWT                     =
 =============================================*/
 
-//export const PRIVATE_KEY = "CoderhouseBackendCourseSecretKeyJWT";
 export const PRIVATE_KEY = config.jwtPrivateKey;
 
 // 1) FUNCION PARA GENERAR TOKEN
@@ -84,19 +69,14 @@ export const generateJWToken = (user) => {
 /*=============================================
 =                 PASSPORTCALL                =
 =============================================*/
-//* para manejo de errores
-// esta funcion luego se llama en el endpoint luego del login del usuario.
 export const passportCall = (strategy) => { 
     return async (req, res, next) => {
-        console.log("Entrando a llamar strategy: ");
-        console.log(strategy);
         passport.authenticate(strategy, function (err, user, info) {
             if (err) return next(err);
             if (!user) {
                 return res.status(401).send({ error: info.messages ? info.messages : info.toString() });
             }
-            // console.log("Usuario obtenido del strategy: ");
-            // console.log(user);
+            //req.logger.info("Usuario obtenido del strategy: ", user);
             req.user = user;
             next();
         })(req, res, next);
@@ -104,20 +84,14 @@ export const passportCall = (strategy) => {
 };
 
 
-
 /*=============================================
 =                 AUTHTOKEN                  =
 =============================================*/
 //fue sacada de utils.js y llevada a users.extend.routes.js, dentro de la funcion handlePolicies.
 
-
-
 /*=============================================
 =                    ROLES                    =
 =============================================*/
-
-//* para manejo de Auth
-
 export const authorization = (...allowedRoles) => {
     return async (req, res, next) => {
         if (!req.user) return res.status(401).send({error:"Error", msg:"Unauthorized: User not found in JWT"});

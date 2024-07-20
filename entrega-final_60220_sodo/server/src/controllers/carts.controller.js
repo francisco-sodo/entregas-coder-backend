@@ -1,61 +1,58 @@
-//repository
 
+
+//*repository
 import { cartService, productService, ticketService, userService } from '../services/service.js';
 import { sendPurchaseConfirmationEmail } from '../controllers/email.controller.js';
 
 
 
 
-//get A1
-//? MOSTRAR TODOS LOS CARRITOS
+
+// all carts
 export const getAllCarts = async (req, res) => {
     try {
         let carts = await cartService.getAll()
         res.json( carts )
 
     } catch (error) {
+        req.logger.error('500: Error al obtener todos los carritos');
         res.status(500).send({ status: 500, error: 'Error al obtener los carritos' });
     }
 }
 
 
-//get by id A2
-//? BUSCAR Y MOSTRAR UN CARRITO POR SU ID
+//get cart by id
 export const getCartById = async (req, res) => {
     let { cid } = req.params
-   
-  
+
     try {
         let cartId = await cartService.getById(cid)
        
-
         cartId
         ? res.send({ msg: `Carrito con el ID ${cid} encontrado`, cart: cartId})
         : res.status(404).send({ error:`Carrito con el ID ${cid} no fue encontrado` });
-   
+    
     } catch (error) {
+        req.logger.error('500: Error al obtener los carritos por ID');
         res.status(500).send({ status: 500, error: 'Error al obtener los carritos por ID' });
     }
 }
 
-//post A3
-//? CREAR CARRITOS
+//post cart
 export const createCart = async (req, res) => {
    
     try {
-      
         let newPost = await cartService.create()
         res.send(newPost);
     
-       
     } catch (error) {
+        req.logger.error('500: Error al agregar un nuevo carrito');
         res.status(500).send({ status: 500, error: 'Error al agregar un nuevo carrito' });
     }
 }
 
 
-
-
+// put product in cart
 export const updateProductInCart = async (req, res) => {
     let { cid, pid } = req.params
 
@@ -67,32 +64,28 @@ export const updateProductInCart = async (req, res) => {
 
         // Verificar si el usuario es premium y es el dueño del producto
         if (req.user.role === 'premium' && product.owner === req.user.email) {
+            req.logger.warning("No puedes agregar a tu carrito tus propios productos");
             return res.status(403).send({ msg: "No puedes agregar a tu carrito tus propios productos" });
         }
-
 
         let newProductInCart = await cartService.update(cid,pid)
         newProductInCart = await cartService.getById(cid)
         res.send({msg:"Se ha agregado el producto al carrito con exito", payload:newProductInCart})
     
     } catch (error) {
+        req.logger.error('500: Error al agregar un producto a un carrito');
         res.status(500).send({ status: 500, error:' Error al agregar un producto a un carrito' });  
     }
 }
 
 
-
-
-// A5
-//? ACTUALIZAR SOLO CANTIDAD (quantity) DE PRODUCTO SELECCIONADO EN CARRITO. 
+//actualizar cantidad del producto en carrito
 export const updateProdQuantInCart = async (req, res) => {
     //patch
     let { cid, pid } = req.params;
     let {quantity} = req.body;
     
     try {
-        //todo -->  aca falta verificar si el id del producto a modificar existe. 200/404.
-
         let newQuantity = await cartService.updateQuantity(cid, pid, quantity);
        
         newQuantity
@@ -100,156 +93,47 @@ export const updateProdQuantInCart = async (req, res) => {
         : res.status(404).send({ error:`Producto con el ID ${pid} no fue encontrado en el carrito con el ID ${cid}` })
 
     } catch (error) {
-        console.error('Error al actualizar la cantidad de un producto en este carrito:');
+        req.logger.error('500: Error al actualizar la cantidad de un producto en este carrito:');
         res.status(500).send({ status: 500, error:' Error al actualizar la cantidad de un producto en este carrito' });
     }
 }
 
 
-// A6
-//? ELIMINAR 1 PRODUCTO SELECCIONADO DENTRO DE CARRITO. 
+// delete product in a cart
 export const deleteProductInCart = async (req, res) => {
     let { cid, pid } = req.params
     try {
         let deletedProduct = await cartService.delete(cid,pid)
-        console.log("Producto eliminado ", deletedProduct)
+        req.logger.info("ID de Producto eliminado: "+ pid);
 
         deletedProduct
         ? res.send({ msg: `Producto con el ID ${pid} eliminado del carrito`})
         : res.status(404).send({ error:`Producto con el ID ${pid} no fue encontrado` });
    
     } catch (error) {
+        req.logger.error('500: Error al querer eliminar un producto de este carrito');
         res.status(500).send({ status: 500, error: 'Error al querer eliminar un producto de este carrito' });
     }
 }
 
 
 // A7
-//? VACIAR CARRITO.
+// vaciar carrito
 export const clearCart = async (req, res) => {
     let { cid } = req.params
     try {
         let clearedCart = await cartService.clear(cid)
-        console.log("ACKNOWLEDGED", clearedCart)
-
+        
         clearedCart
-        ? res.send({ msg: `Carrito con el ID ${cid} vaciado`})
+        ? res.send({ msg: `Carrito con el ID ${cid} vaciado`}) + req.logger.info("ID de carrito Vaciado: " + cid)
         : res.status(404).send({ error:`Carrito con el ID ${cid} no pudo ser vaciado` });
    
     } catch (error) {
+        req.logger.error('500: Error al querer vaciar un carrito');
         res.status(500).send({ status: 500, error: 'Error al querer vaciar un carrito por ID' });
     }
 }
 
-
-
-// A8
-//? FINALIZAR COMPRA.
-
-
-// export const purchaseProduct = async (req, res) => {
-//     let { cid } = req.params
-   
-    
-   
-//     try {
-//         // Obtener el carrito por su ID
-//         const cart = await cartService.getById(cid);
-      
-//         if (!cart) {
-//             console.error(`El carrito con ID ${cid} no fue encontrado`);
-//             return res.status(404).send({ error: `El carrito con el ID ${cid} no fue encontrado` });
-//         }
-
-
-//         // Iterar sobre los productos del carrito para finalizar la compra
-//         const productsPurchased = [];
-//         const productsNotPurchased = [];
-//         const productDetailsForTicket = [];
-
-
-//         for (const product of cart.products) {
-//             // Obtener el producto de la base de datos por su ID
-//             const productDetails = await productService.getById(product.product);
-//             //console.log('XXXXXDetalles del producto:', productDetails);
-//             if (!productDetails) {
-//                 productsNotPurchased.push(product.product);
-//                 continue;
-//             }
-//             // Verificar si hay suficiente stock del producto
-//             if (productDetails.stock >= product.quantity) {
-//                 // Restar la cantidad comprada del stock del producto
-//                 productDetails.stock -= product.quantity;
-//                 await productDetails.save();
-//                 // Agregar el producto a la lista de productos comprados
-//                 productsPurchased.push(product.product);
-//                 productDetailsForTicket.push({ title: productDetails.title, quantity: product.quantity });
-//                 //console.log(`Producto añadido: ${productDetails.title}`);
-//             } else {
-//                 // Agregar el producto a la lista de productos que no pudieron ser comprados
-//                 productsNotPurchased.push(product.product);
-//             }
-//         }
-
-
-//         // calcular total de compra
-//         const calculateTotalAmount = async (cart) => {
-//             let totalAmount = 0;
-//             try {
-//                 for (const product of cart.products) {
-//                     // Obtener los detalles del producto de la base de datos por su ID
-//                     const productDetails = await productService.getById(product.product);
-//                     if (!productDetails) {
-//                         // Manejar el caso donde los detalles del producto no se encuentran
-//                         continue;
-//                     }
-//                     // Agregar el precio del producto multiplicado por la cantidad al totalAmount
-//                     totalAmount += productDetails.price * product.quantity;
-//                 }
-//             } catch (error) {
-//                 console.error('Error al calcular el monto total de la compra:', error);
-//                 // Si hay un error al calcular el monto, puedes retornar 0 o manejarlo de otra forma según tu lógica de negocio
-//                 return 0;
-//             }
-//             return totalAmount;
-//         };
-
-
-
-//         //Generar ticket con los detalles de la compra
-//         let user = req.user.email
-//         const ticketDetails = {
-//             amount: await calculateTotalAmount(cart),
-//             purchaser: user,
-//             products: productDetailsForTicket
-//         };
-//         //console.log("XXXXDetalles del ticket antes de generar:", ticketDetails);
-
-
-//         const generatedTicket = await ticketService.generateTicket(ticketDetails);
-//         console.log("Ticket de Compra generado:\n", generatedTicket)
-
-//         // Actualizar el carrito para contener solo los productos que no se pudieron comprar
-//         cart.products = cart.products.filter(product => !productsPurchased.includes(product.product));
-//         await cart.save();
-
-//         // email confirmando compra
-//         await sendPurchaseConfirmationEmail(user, generatedTicket);
-
-
-//           // Enviar respuesta al cliente con los productos comprados, los que no pudieron ser comprados y el ticket generado
-//           res.send({
-//             purchased: productsPurchased,
-//             notPurchased: productsNotPurchased,
-//             ticket: generatedTicket,
-//         });
-
-
-//     } catch (error) {
-//         console.error('Error al querer finalizar la compra del producto:', error);
-//         res.status(500).send({ status: 500, error: 'Error al querer finalizar la compra del producto' });
-//     }
-// }
 
 
 export const purchaseProductInCart = async (req, res) => {
@@ -270,16 +154,12 @@ export const purchaseProductInCart = async (req, res) => {
         // Enviar correo de confirmación de compra
         await sendPurchaseConfirmationEmail(user, generatedTicket);
 
-        // res.send({
-        //     msg: `Compra del producto con ID ${pid} realizada con éxito`,
-        //     ticket: generatedTicket,
-        // });
         res.json({
             msg: `Compra del producto con ID ${pid} realizada con éxito`,
             ticket: generatedTicket,
         });
     } catch (error) {
-        console.error('Error al comprar el producto en el carrito:', error);
+        req.logger.error('500: Error al comprar el producto en el carrito:'+ error);
         res.status(500).send({ status: 500, error: 'Error al comprar el producto en el carrito' });
     }
 };

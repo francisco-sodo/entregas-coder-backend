@@ -1,7 +1,6 @@
 
-//repository
+//*repository
 import { productService } from '../services/service.js';
-
 import userModel from '../services/dao/db/models/user.model.js';
 
 // errors handler
@@ -23,9 +22,10 @@ export const getAllProducts = async (req, res) => {
     if (!isNaN(limit) && limit > 0) {
       // Verificar si el límite es mayor que el total de productos
       if (limit > quantProducts) {
+        req.logger.warning("El límite debe ser igual o menor a la cantidad de productos");
+
         return res
-          .status(400)
-          .send({
+          .status(400).send({
             error: `El límite debe ser igual o menor a la cantidad de productos`,
             cantidad_productos: `${quantProducts}`,
           });
@@ -39,15 +39,10 @@ export const getAllProducts = async (req, res) => {
       res.send(products);
     }
   } catch (error) {
-    res
-      .status(500)
-      .send({ status: 500, error: " No se pueden mostrar los productos" });
-      console.log(error)
+    req.logger.error("500: No se pueden mostrar los productos");
+    res.status(500).send({ status: 500, error: " No se pueden mostrar los productos" });
   }
 };
-
-
-
 
 
 
@@ -64,12 +59,8 @@ export const getProductById = async (req, res) => {
           error: `El Producto con el ID: ${pid} no fue encontrado:(`,
         });
   } catch (error) {
-    res
-      .status(500)
-      .send({
-        status: 500,
-        error: " Error al querer mostrar un producto por ID",
-      });
+    req.logger.error("500: Error al querer mostrar un producto por ID");
+    res.status(500).send({ status: 500, error: "Error al querer mostrar un producto por ID"});
   }
 };
 
@@ -77,22 +68,18 @@ export const getProductByTitle = async (req, res) => {
   let title = req.params.title;
   
   try {
-    console.log("Busqueda Producto");
     let queryProduct = await productService.getByTitle(title);
 
     if (!queryProduct) {
       res.status(404).send({ message: "No se ha encontrado el Producto" });
       throw new Error("No se ha encontrado el Producto");
+
     } else {
       res.json(queryProduct);
     }
-  } catch (error) {
-    res
-      .status(500)
-      .send({
-        status: 500,
-        error: " Error al querer mostrar un producto por /:title",
-      });
+  } catch(error) {
+    req.logger.error("500: Error al querer mostrar un producto por /:title");
+    res.status(500).send({status: 500, error: " Error al querer mostrar un producto por /:title"});
   }
 };
 
@@ -100,7 +87,6 @@ export const getProductByTitle = async (req, res) => {
 export const getProductByCategory = async (req, res) => {
   let category = req.params.category;
   try {
-    console.log("Busqueda Producto por categoria");
     let queryProduct = await productService.getByCategory(category);
 
     if (!queryProduct) {
@@ -110,12 +96,8 @@ export const getProductByCategory = async (req, res) => {
       res.json(queryProduct);
     }
   } catch (error) {
-    res
-      .status(500)
-      .send({
-        status: 500,
-        error: " Error al querer mostrar un producto por /:category",
-      });
+    req.logger.error("500: Error al querer mostrar un producto por /:category");
+    res.status(500).send({ status: 500, error: " Error al querer mostrar un producto por /:category"});
   }
 };
 
@@ -149,18 +131,19 @@ export const createProduct = async (req, res) => {
     // Si no hay un usuario autenticado válido, asignar al admin por defecto
     const adminUser = await userModel.findOne({ role: 'admin' });
     if (adminUser) {
-        newProduct.owner = adminUser.email; // Asigna el email del admin por defecto
+        newProduct.owner = adminUser.email;
         
     } else {
         throw new Error("Admin user no encontrado");
     }
 }
-
   let newPost = await productService.create(newProduct);
   res.json(newPost)
+  req.logger.info("Producto creado exitosamente");
+
 
         } catch (error) {
-          console.error(error.cause);
+          req.logger.error(error.message);
           res.status(500).send({ error: error.code, message: error.message });
         }
 };
@@ -180,9 +163,8 @@ export const updateProduct = async (req, res) => {
       product: updated,
     });
   } catch (error) {
-    res
-      .status(500)
-      .send({ status: 500, error: " Error al querer editar un producto" });
+    req.logger.error("500: Error al querer editar un producto");
+    res.status(500).send({ status: 500, error: " Error al querer editar un producto" });
   }
 };
 
@@ -199,22 +181,20 @@ export const deleteProduct = async (req, res) => {
       return res.status(404).send({ msg: `Producto con el ID ${pid} no fue encontrado` });
     }
 
-
     // Verificar permisos del usuario
     const isAdmin = req.user.role === 'admin';
     const isPremium = req.user.role === 'premium' && product.owner === req.user.email;
 
     if (isAdmin || isPremium) {
       let idProduct = await productService.delete(pid);
-      //console.log("ACKNOWLEDGED", idProduct);
       return res.send({ msg: `Producto ${pid} fue eliminado correctamente`, payload: idProduct });
     } else {
       return res.status(403).send({ msg: "No tienes permisos para eliminar este producto" });
     }
   } catch (error) {
-    console.error(error);
     return res.status(500).send({ status: 500, error: " Error al eliminar un producto" });
   }
+
 
 };
 

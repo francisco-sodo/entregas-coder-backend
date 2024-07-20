@@ -4,7 +4,6 @@ import { productsModel } from './models/products.model.js';
 
 export default class ProductServiceMongo {
     constructor() {
-        //console.log("Working products with Database persistence in mongodb");
     }
 
 
@@ -15,34 +14,25 @@ export default class ProductServiceMongo {
             return products.map(product => product.toObject());
             
         } catch (error) {
-            console.error('Error al obtener los productos', error);
-            throw error; 
+            throw Error('Error al obtener los productos', error); 
         }
     }
 
-     //get find by name
+     //get find by title
      getByTitle = async (title) => {
-        //const result = await productsModel.findOne({title: title});
         const result = await productsModel.find({ title: { $regex: new RegExp(title, 'i') } });
-        console.log(":::::::result:::::::")
-        console.log(result)
+        // console.log(":::::::result:::::::", result)
         return result;
     };
 
  
 
-      //get find by name
+      //get find by category
       getByCategory = async (category) => {
-        //const result = await productsModel.find({category: category});
         const result = await productsModel.find({category: { $regex: new RegExp(category, 'i') }});
-        console.log(":::::::result:::::::")
-        console.log(result)
+        // console.log(":::::::result:::::::", result)
         return result;
-    
     };
-
-    //puedo buscar por categoria, por stock, etc
-
 
     //get by id
     getById = async (pid) => {
@@ -51,8 +41,7 @@ export default class ProductServiceMongo {
             return productById
             
         } catch (error) {
-            console.error('Error al buscar un producto por su id:', error);
-            throw error; 
+            throw Error('Error al buscar un producto por su id:', error);
         }
     }
    
@@ -64,10 +53,8 @@ export default class ProductServiceMongo {
             // si todo esta ok...
             return newProduct
         } 
-        
         catch (error) {
-            console.error('Error al crear un producto', error);
-            throw error; 
+            throw Error('Error al crear un producto', error);
         }
     }
     
@@ -75,17 +62,14 @@ export default class ProductServiceMongo {
     update = async (pid,body) => {
         try {
             let updateProduct = await productsModel.findOneAndUpdate(
-                { _id: pid },
-                body,
-                { new: true });
+                { _id: pid },body,{ new: true });
                 if(!updateProduct){
                     throw new Error(`Producto con ID ${pid} no encontrado`);
                 }
             return updateProduct
 
         } catch (error) {
-            console.error('Error al modificar un producto', error);
-            throw error; 
+            throw Error('Error al modificar un producto', error);
         }
     }
     
@@ -96,8 +80,7 @@ export default class ProductServiceMongo {
             return deleteProduct
 
         } catch (error) {
-            console.error('Error al eliminar un producto', error);
-            throw error; 
+            throw Error('Error al eliminar un producto', error);
         }
     }
 

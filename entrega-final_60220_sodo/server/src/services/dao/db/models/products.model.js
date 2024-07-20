@@ -1,7 +1,5 @@
 import mongoose from 'mongoose';
-//import { Schema } from "mongoose";
 import mongoosePaginate from 'mongoose-paginate-v2';
-
 
 const productsCollection = 'products';
 
@@ -17,9 +15,6 @@ const stringTypeSchemaUniqueRequired = {
     required: true
 };
 
-
-
-
 const productSchema = new mongoose.Schema({
 
     title: {type: String, unique:false, required:true},
@@ -34,8 +29,6 @@ const productSchema = new mongoose.Schema({
         type: String,
         required: true,
     }
-    
-
 })
 
 

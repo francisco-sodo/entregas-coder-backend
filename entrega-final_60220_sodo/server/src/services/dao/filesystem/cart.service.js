@@ -25,7 +25,7 @@ export class CartsServiceFileSystem {
           this.#fileSystem = fs;
      }
 
-     //todo **********   RANDOM ID CART   **************
+     //-**********   RANDOM ID CART   **************
      randomIdCartGenerator = async () => {
           let code = "";
           for (let i = 0; i < 9; i++) {
@@ -38,7 +38,7 @@ export class CartsServiceFileSystem {
           return randomLetter + '-' + code;
      };
 
-     //todo **********   CREAR DIR O ARCHIVO SI NO EXISTEN   **************
+     //-**********   CREAR DIR O ARCHIVO SI NO EXISTEN   **************
      createDirOrFile = async () => {
           await this.#fileSystem.promises.mkdir(this.#cartDirPath, {
                recursive: true,
@@ -48,7 +48,7 @@ export class CartsServiceFileSystem {
           }
      };
 
-     //todo **********   GET CARTS   **************
+     //- **********   GET CARTS   **************
      getAll = async () => {
           try {
                await this.createDirOrFile();
@@ -73,7 +73,7 @@ export class CartsServiceFileSystem {
           }
      };
 
-     //todo **********   GET CART BY ID  **************
+     //- **********   GET CART BY ID  **************
      getById = async (id) => {
           try {
                await this.getAll();
@@ -93,13 +93,13 @@ export class CartsServiceFileSystem {
      };
 
 
-     //todo **********   POST CART    **************
+     //- **********   POST CART    **************
      create = async () => {
           try {
                let idCart = await this.randomIdCartGenerator();
                let newCart = new Cart(idCart, []);
-               console.log("*** Nuevo carrito: ***");
-               console.log(newCart);
+               // console.log("*** Nuevo carrito: ***");
+               // console.log(newCart);
 
                await this.createDirOrFile();
                await this.getAll();
@@ -113,13 +113,13 @@ export class CartsServiceFileSystem {
 
                return this.#cart;
           } catch (error) {
-               console.error(`ERROR AL AGREGAR CARRITO NUEVO: ${error}`);
-               throw error;
+               throw Error(`ERROR AL AGREGAR CARRITO NUEVO: ${error}`);
+               
           }
      };
 
 
-     //todo **********   PUT PRODUCTS IN CART    **************        
+     //- **********   PUT PRODUCTS IN CART    **************        
      update = async (cid,pid) =>{
 
           
