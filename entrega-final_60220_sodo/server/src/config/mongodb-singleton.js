@@ -23,6 +23,7 @@ export default class MongoSingleton {
     #connectMongoDB = async () => {
         try {
             mongoose.connect(config.mongoUrl,
+            //mongoose.connect(config.mongoUrlTest,
             {
                 w: 1,
             }

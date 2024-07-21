@@ -19,6 +19,7 @@ router.get('/:pid', ProductController.getProductById)
 
 // POST
 router.post('/', passportCall('jwt'),authorization('admin','premium'),ProductController.createProduct)
+//router.post('/',ProductController.createProduct) // to testing
 
 // PUT
 router.put('/:pid',passportCall('jwt'),authorization('admin','premium'), ProductController.updateProduct)

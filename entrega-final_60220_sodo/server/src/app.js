@@ -153,7 +153,9 @@ app.use('/mockingproducts', fakeProductsRoutes)
 /*=============================================
 =           declaracion de PORT              =
 =============================================*/
-const SERVER_PORT = config.port;
+
+const SERVER_PORT = process.env.PORT || config.port;
+
 const httpServer = app.listen(SERVER_PORT, () => {
     console.log(`SERVER RUN ON PORT: ${SERVER_PORT}`)
 })

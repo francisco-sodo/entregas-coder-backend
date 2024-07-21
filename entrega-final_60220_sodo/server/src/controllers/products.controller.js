@@ -123,30 +123,47 @@ export const createProduct = async (req, res) => {
   }
 
 
-  // Asignar el owner (email del usuario) al producto
-  if (req.user && (req.user.role === 'premium' || req.user.role === 'admin')) {
-    newProduct.owner = req.user.email; // Asigna el email del usuario como owner
-    
-} else {
-    // Si no hay un usuario autenticado válido, asignar al admin por defecto
-    const adminUser = await userModel.findOne({ role: 'admin' });
-    if (adminUser) {
-        newProduct.owner = adminUser.email;
-        
-    } else {
-        throw new Error("Admin user no encontrado");
+    // Asignar el owner (email del usuario) al producto
+    if (req.user && (req.user.role === 'premium' || req.user.role === 'admin')) {
+      newProduct.owner = req.user.email; // Asigna el email del usuario como owner
+      
+  } else {
+      // Si no hay un usuario autenticado válido, asignar al admin por defecto
+      const adminUser = await userModel.findOne({ role: 'admin' });
+      if (adminUser) {
+          newProduct.owner = adminUser.email;
+          
+      } else {
+          throw new Error("Admin user no encontrado");
+      }
+  }
+
+    const code = generateUniqueCode()
+    newProduct.code = code
+
+    let newPost = await productService.create(newProduct);
+
+    res.json(newPost)
+    req.logger.info("Producto creado exitosamente");
+
+
+    } catch (error) {
+      req.logger.error(error.message);
+      res.status(500).send({ error: error.code, message: error.message });
     }
-}
-  let newPost = await productService.create(newProduct);
-  res.json(newPost)
-  req.logger.info("Producto creado exitosamente");
-
-
-        } catch (error) {
-          req.logger.error(error.message);
-          res.status(500).send({ error: error.code, message: error.message });
-        }
 };
+
+
+// funcion para código único
+const generateUniqueCode = () => {
+  const randomNumber = Math.floor(Math.random() * (99999 - 10000 + 1)) + 10000;
+  const randomLetter = String.fromCharCode(
+    Math.floor(Math.random() * (90 - 65 + 1)) + 65
+  );
+  const codeGenerated = randomNumber +'-'+ randomLetter
+  return codeGenerated.toString(); 
+};
+
 
 
 
