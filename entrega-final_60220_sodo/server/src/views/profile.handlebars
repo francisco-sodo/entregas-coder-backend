@@ -1,27 +1,29 @@
-<div>
+<main class="userProfile-main">
+  <div class="userProfile-container">
+<section class="userProfile-info">
   <h1>Tu perfil</h1>
-  <p>{{user.name}}</p>
-  <p>{{user.email}}</p>
-  <p>{{user.age}}</p>
-  <p>{{user.role}}</p>
+  <p>Nombre: <span>{{user.name}}</span> </p>
+  <p>Email: <span>{{user.email}}</span> </p>
+  <p>Edad: <span>{{user.age}}</span> </p>
+  <p>Rol: <span>{{user.role}}</span> </p>
+</section>
 </div>
 
-<div>
-    <a href="/user/logout">Logout</a>
-</div>
+
 
 {{!-- DEPENDIENDO DEL ROL, PUEDE VER UNOS U OTROS BOTONES --}}
 
-
+<section class="userProfile-menu">
 
 {{#if isUser}}
 <div>
   <a href="/products">Productos</a>
 </div>
+<span>|</span>
 <div>
-  {{!-- <a href="/carts/:cid">Ver Mi Carrito</a> --}}
-    <a href="/carts/{{user.cart}}">Ver Mi Carrito</a>
+    <a href="/carts/{{user.cart}}">Mi Carrito</a>
 </div>
+<span>|</span>
 <div>
   <a href="/chat" target="_blank">Ir al Chat</a>
 </div>
@@ -31,10 +33,11 @@
 <div>
   <a href="/products">Productos</a>
 </div>
+<span>|</span>
 <div>
-  {{!-- <a href="/carts/:cid">Ver Mi Carrito</a> --}}
-    <a href="/carts/{{user.cart}}">Ver Mi Carrito</a>
+    <a href="/carts/{{user.cart}}">Mi Carrito</a>
 </div>
+<span>|</span>
 <div>
   <a href="/chat">Ir al Chat</a>
 </div>
@@ -45,8 +48,21 @@
 <div>
   <a href="/products">Productos</a>
 </div>
+<span>|</span>
 <div>
-  <p>Editar Productos</p>
-  <p>Editar usuarios</p>
+  <a class="no-developed-button" href="#">Editar Productos</a>
+</div>
+<span>|</span>
+<div>
+  <a class="no-developed-button" href="#">Editar Usuarios</a>
 </div>
 {{/if}}
+
+<span>|</span>
+<div>
+    <a href="/user/logout">Logout</a>
+</div>
+
+</section>
+
+</main>

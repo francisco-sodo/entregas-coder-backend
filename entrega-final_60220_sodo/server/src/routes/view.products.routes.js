@@ -123,7 +123,11 @@ router.get("/", passportCall("jwt"), authorization("user", "premium", "admin"), 
     }
   });
 
-// VISTA DE UN SOLO PRODUCTO
+
+
+
+
+//* VISTA DE DETALLE DE PRODUCTO
 //EJ: http://localhost:8080/products/product/65f39b4e3942d59690fbe26f
 
 router.get("/product/:pid",passportCall("jwt"),authorization("user", "premium", "admin"),async (req, res) => {
@@ -146,8 +150,10 @@ router.get("/product/:pid",passportCall("jwt"),authorization("user", "premium", 
 
         res.render("product", {
           title: "Vista | Producto",
+          styleProdDetail: "styleProductDetail.css",
           cid: cid,
           isNotAdmin: req.user.role !== "admin",
+          userName: user.name,
           product: {
             _id: product._id,
             title: product.title,
@@ -163,7 +169,9 @@ router.get("/product/:pid",passportCall("jwt"),authorization("user", "premium", 
       } else {
         res.render("product", {
           title: "Vista | Producto",
+          styleProdDetail: "styleProductDetail.css",
           isNotAdmin: req.user.role !== "admin",
+          userName: user.name,
           product: {
             _id: product._id,
             title: product.title,

@@ -1,16 +1,35 @@
-<main>
-    <div class="cart-header" data-cid="{{cid}}">
-        <h1>{{owner}}, este es tu carrito</h1>
-        {{!-- <p>El ID de tu carrito es {{cid}}</p> --}}
+<main class="main-container">
 
-        <button id="clear-cart-btn" onclick="clearCart()">Vaciar Carrito</button>
-    </div>
 
-    <div>
-        <a href="/products">Ver Productos</a>
-    </div>
+    <nav class="nav">
+        <section>
+            <div class="cart-header" data-cid="{{cid}}">
+                <button class="clear-cart-btn" id="clear-cart-btn" onclick="clearCart()">Vaciar Carrito</button>
+            </div>
+        </section>
+        <section class="menu">
+            <div>
+                <a href="/products">Productos</a>
+            </div>
+            <span>|</span>
+            <div>
+                <a href="/user/current">Mi Perfil</a>
+            </div>
+            <span>|</span>
+            <div>
+                <a href="/user/logout">Logout</a>
+            </div>
+            <span>|</span>
+            <div class="user" data-cid="{{cid}}">
+                <p><strong>{{owner}}</strong></p>
+            </div>
+        </section>
+    </nav>
 
-    <section id="products-list-container">
+    
+
+
+    <section class="products-list-container" id="products-list-container">
 
         {{#if products.length}}
 
@@ -25,22 +44,19 @@
 
                 <div class="info-container">
                     <h3>{{this.title}}</h3>
-                    <p><b>Precio:</b> ${{this.price}}</p>
+                    <h4><b>Precio:</b> ${{this.price}}</h4>
                     <p><b>Cantidad:</b> {{this.quantity}}</p>
                     {{!-- <p><b>ID:</b> {{this.pid}}</p> --}}
+                    <button onclick="purchase('{{../cid}}', '{{this.pid}}')">Comprar</button>
                 </div>
 
             </section>
 
             <section class="btn-container">
-
-                <button onclick="purchase('{{../cid}}', '{{this.pid}}')">Comprar</button>
                 <button onclick="deleteProduct('{{this.pid}}')">Quitar</button>
-
             </section>
 
         </div>
-        <hr />
         {{/each}}
 
 

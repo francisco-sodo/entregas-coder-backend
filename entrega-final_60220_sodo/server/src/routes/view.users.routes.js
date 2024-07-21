@@ -48,7 +48,8 @@ router.get("/current", passportCall('jwt'),authorization('admin','user','premium
 
 router.get("/current/premium", passportCall('jwt'), authorization('premium'), (req, res)=>{
   res.render('profile',{
-    title: "Premium" ,
+    title: "Premium",
+    profileStyle: "StyleProfile.css",
     user: req.user,
     role: req.user.role,
     isAdmin: req.user.role === 'admin',
@@ -59,7 +60,8 @@ router.get("/current/premium", passportCall('jwt'), authorization('premium'), (r
 
 router.get("/current/admin", passportCall('jwt'), authorization('admin'), (req, res)=>{
     res.render('profile',{
-      title: "Admin" ,
+      title: "Admin",
+      profileStyle: "StyleProfile.css",
       user: req.user,
       role: req.user.role,
       isAdmin: req.user.role === 'admin',
@@ -70,7 +72,8 @@ router.get("/current/admin", passportCall('jwt'), authorization('admin'), (req, 
 
 router.get("/current/user", passportCall('jwt'), authorization('user'), (req, res)=>{
   res.render('profile',{
-    title: "User" ,
+    title: "User",
+    profileStyle: "StyleProfile.css",
     user: req.user,
     role: req.user.role,
     isAdmin: req.user.role === 'admin',

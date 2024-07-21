@@ -11,10 +11,11 @@
         <div class="user">
             <h2>Bienvenido {{user.name}}!</h2>
         </div>
-
+        <span>|</span>
         <div>
             <a href="/user/current">Mi Perfil</a>
         </div>
+        <span>|</span>
         <div>
             <a href="/user/logout">Logout</a>
         </div>
@@ -29,13 +30,15 @@
         <div>
             <a href="/carts/:cid">Mi Carrito</a>
         </div>
+        <span>|</span>
         <div>
             <a href="/chat" target="_blank">Ir al Chat</a>
         </div>
-
+        <span>|</span>
         <div>
             <a href="/user/current">Mi Perfil</a>
         </div>
+        <span>|</span>
         <div>
             <a href="/user/logout">Logout</a>
         </div>
@@ -50,13 +53,15 @@
         <div>
             <a href="/carts/:cid">Mi Carrito</a>
         </div>
+        <span>|</span>
         <div>
             <a href="/chat">Ir al Chat</a>
         </div>
-
+        <span>|</span>
         <div>
             <a href="/user/current">Mi Perfil</a>
         </div>
+        <span>|</span>
         <div>
             <a href="/user/logout">Logout</a>
         </div>
@@ -126,7 +131,7 @@
             </div>
             <ul>
                 <li>
-                    <h4>{{this.title}}</h4>
+                    <h3>{{this.title}}</h3>
                 </li>
                 <li>
                     <h4><b>Precio: </b>${{this.price}}</h4>
@@ -138,7 +143,6 @@
                 {{!-- <li><b>ID:</b> {{this._id}}</li> --}}
             </ul>
             <button class="btn-normal"><a href='/products/product/{{this._id}}'>Ver detalles</a></button>
-                {{!-- <button onclick="addToCart('{{this._id}}')">Agregar al Carrito</button> --}}
                
         </div>
 

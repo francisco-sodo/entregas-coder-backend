@@ -45,3 +45,38 @@
     color: #fff;
     cursor: pointer;
 }
+.btn-normal:hover{
+    background-color: darkslateblue;
+}
+.btn-secundary{
+    height: 45px;
+    width: 150px;
+    border: none;
+    border-radius: 5px;
+    background-color: #000000;
+    cursor: pointer;
+}
+.btn-secundary a{
+    color: #fff;
+    text-decoration-line: none;
+    font-size: 1.2rem; 
+}
+.btn-secundary:hover{
+    background-color: darkslateblue;
+}
+
+.footer-options-container{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: .3em;
+    font-size: .9rem;
+}
+.footer-options-container p a{
+    text-decoration-line: none;
+    color: darkslateblue;
+}
+.footer-options-container p a:hover{
+    text-decoration-line:underline;
+}
